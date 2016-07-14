@@ -19,7 +19,8 @@ puts $chan "$timestamp\n"
 
 puts $chan "$result"
 
-set result [exec cmake --build .]
+#set result [exec cmake --build .]
+set result [exec make]
 puts $chan "$result"
 puts $chan "\n"
 
