@@ -2,8 +2,9 @@
 //// Created by Betsalel Williamson on 6/4/16.
 ////
 
-#include <sys/param.h>
+//#include <sys/param.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "controller.h"
 
 /**
