@@ -21,6 +21,11 @@ Program may be written in C/C++, Java, Perl, or Python as long as it runs on tho
 Program must run with the following command:
 `./vmsim –n <numframes> -a <opt|clock|aging|lru> [-r <refresh>] <tracefile>`
 
+The program will then run through the memory references of the file and display the action taken for each address:
+ * hit
+ * page fault – no eviction
+ * page fault – evict clean
+ * page fault – evict dirty 
 
 When the trace is over, print out summary statistics in the following format:
 ```
