@@ -43,10 +43,16 @@ if {[file exists config.txt]} {
   cf_write $cfile BUILD_DIR PROJECT_NAME TEST_SUITE_NAME BUILD_SCRIPT_FILE TEST_SCRIPT_FILE TEST_EXE MAIN_EXE
 }
 
-puts "Reading in configuation file..."
+set chan [open config.log a]
+set timestamp [clock format [clock seconds]]
+puts $chan "$timestamp\n"
+
+puts $chan "Reading in configuation file..."
 foreach entry [cf_read $cfile] {
   lassign $entry name value
   set $name $value
 #  set
-  puts "$name: $value"
+  puts $chan "$name: $value"
 }
+puts $chan "\n"
+close $chan

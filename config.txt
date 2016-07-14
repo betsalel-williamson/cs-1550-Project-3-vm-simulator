@@ -1,1 +1,7 @@
-{BUILD_DIR _build} {PROJECT_NAME vmsim} {TEST_SUITE_NAME TestSuite} {BUILD_SCRIPT_FILE ./build.tcl} {TEST_SCRIPT_FILE ./test.tcl} {TEST_EXE _build/test/mainTests/TestSuite} {MAIN_EXE _build/vmsim}
+{BUILD_DIR _build}
+{PROJECT_NAME vmsim}
+{TEST_SUITE_NAME TestSuite}
+{BUILD_SCRIPT_FILE ./build.tcl}
+{TEST_SCRIPT_FILE ./test.tcl}
+{TEST_EXE _build/test/mainTests/TestSuite}
+{MAIN_EXE _build/vmsim}
