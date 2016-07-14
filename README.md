@@ -31,7 +31,7 @@ Total page faults:      181856
 Total writes to disk:   29401
 ```
 
-Provided are two sample memory traces available at `/u/OSLab/original/` in the files swim.trace.gz and gcc.trace.gz. This project will grade with two additional ones. 
+Provided are two sample memory traces available at `/u/OSLab/original/swim.trace.gz` `/u/OSLab/original/gcc.trace.gz`. This project will grade with two additional ones. 
 
 In the resulting trace file is a sequence of lines, each having a memory address in hexadecimal followed by a R or W character to indicate if that access was a read or a write. For example, gcc.trace trace starts like this: 
   ```
