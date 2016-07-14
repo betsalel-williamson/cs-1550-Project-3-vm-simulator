@@ -41,37 +41,37 @@
 // the implementations.  You may be able to skip this step if all your
 // implementations can be constructed the same way.
 
-template<class T>
-PrimeTable *CreatePrimeTable();
+template <class T>
+PrimeTable* CreatePrimeTable();
 
-template<>
-PrimeTable *CreatePrimeTable<OnTheFlyPrimeTable>() {
-    return new OnTheFlyPrimeTable;
+template <>
+PrimeTable* CreatePrimeTable<OnTheFlyPrimeTable>() {
+  return new OnTheFlyPrimeTable;
 }
 
-template<>
-PrimeTable *CreatePrimeTable<PreCalculatedPrimeTable>() {
-    return new PreCalculatedPrimeTable(10000);
+template <>
+PrimeTable* CreatePrimeTable<PreCalculatedPrimeTable>() {
+  return new PreCalculatedPrimeTable(10000);
 }
 
 // Then we define a test fixture class template.
-template<class T>
+template <class T>
 class PrimeTableTest : public testing::Test {
-protected:
-    // The ctor calls the factory function to create a prime table
-    // implemented by T.
-    PrimeTableTest() : table_(CreatePrimeTable<T>()) { }
+ protected:
+  // The ctor calls the factory function to create a prime table
+  // implemented by T.
+  PrimeTableTest() : table_(CreatePrimeTable<T>()) {}
 
-    virtual ~PrimeTableTest() { delete table_; }
+  virtual ~PrimeTableTest() { delete table_; }
 
-    // Note that we test an implementation via the base interface
-    // instead of the actual implementation class.  This is important
-    // for keeping the tests close to the real world scenario, where the
-    // implementation is invoked via the base interface.  It avoids
-    // got-yas where the implementation class has a method that shadows
-    // a method with the same name (but slightly different argument
-    // types) in the base interface, for example.
-    PrimeTable *const table_;
+  // Note that we test an implementation via the base interface
+  // instead of the actual implementation class.  This is important
+  // for keeping the tests close to the real world scenario, where the
+  // implementation is invoked via the base interface.  It avoids
+  // got-yas where the implementation class has a method that shadows
+  // a method with the same name (but slightly different argument
+  // types) in the base interface, for example.
+  PrimeTable* const table_;
 };
 
 #if GTEST_HAS_TYPED_TEST

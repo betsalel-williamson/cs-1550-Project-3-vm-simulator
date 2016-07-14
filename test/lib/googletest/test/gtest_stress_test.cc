@@ -41,9 +41,7 @@
 // gtest-internal-inl.h.  This is how Google Test prevents a user from
 // accidentally depending on its internal implementation.
 #define GTEST_IMPLEMENTATION_ 1
-
 #include "src/gtest-internal-inl.h"
-
 #undef GTEST_IMPLEMENTATION_
 
 #if GTEST_IS_THREADSAFE
@@ -247,14 +245,12 @@ int main(int argc, char **argv) {
 }
 
 #else
-
 TEST(StressTest,
      DISABLED_ThreadSafetyTestsAreSkippedWhenGoogleTestIsNotThreadSafe) {
 }
 
 int main(int argc, char **argv) {
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
-
 #endif  // GTEST_IS_THREADSAFE

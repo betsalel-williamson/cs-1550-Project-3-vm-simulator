@@ -41,48 +41,48 @@ using testing::Test;
 // Used for testing that SetUpTestCase()/TearDownTestCase(), fixture
 // ctor/dtor, and SetUp()/TearDown() work correctly in typed tests and
 // type-parameterized test.
-template<typename T>
+template <typename T>
 class CommonTest : public Test {
-    // For some technical reason, SetUpTestCase() and TearDownTestCase()
-    // must be public.
-public:
-    static void SetUpTestCase() {
-        shared_ = new T(5);
-    }
+  // For some technical reason, SetUpTestCase() and TearDownTestCase()
+  // must be public.
+ public:
+  static void SetUpTestCase() {
+    shared_ = new T(5);
+  }
 
-    static void TearDownTestCase() {
-        delete shared_;
-        shared_ = NULL;
-    }
+  static void TearDownTestCase() {
+    delete shared_;
+    shared_ = NULL;
+  }
 
-    // This 'protected:' is optional.  There's no harm in making all
-    // members of this fixture class template public.
-protected:
-    // We used to use std::list here, but switched to std::vector since
-    // MSVC's <list> doesn't compile cleanly with /W4.
-    typedef std::vector<T> Vector;
-    typedef std::set<int> IntSet;
+  // This 'protected:' is optional.  There's no harm in making all
+  // members of this fixture class template public.
+ protected:
+  // We used to use std::list here, but switched to std::vector since
+  // MSVC's <list> doesn't compile cleanly with /W4.
+  typedef std::vector<T> Vector;
+  typedef std::set<int> IntSet;
 
-    CommonTest() : value_(1) { }
+  CommonTest() : value_(1) {}
 
-    virtual ~CommonTest() { EXPECT_EQ(3, value_); }
+  virtual ~CommonTest() { EXPECT_EQ(3, value_); }
 
-    virtual void SetUp() {
-        EXPECT_EQ(1, value_);
-        value_++;
-    }
+  virtual void SetUp() {
+    EXPECT_EQ(1, value_);
+    value_++;
+  }
 
-    virtual void TearDown() {
-        EXPECT_EQ(2, value_);
-        value_++;
-    }
+  virtual void TearDown() {
+    EXPECT_EQ(2, value_);
+    value_++;
+  }
 
-    T value_;
-    static T *shared_;
+  T value_;
+  static T* shared_;
 };
 
-template<typename T>
-T *CommonTest<T>::shared_ = NULL;
+template <typename T>
+T* CommonTest<T>::shared_ = NULL;
 
 // This #ifdef block tests typed tests.
 #if GTEST_HAS_TYPED_TEST
@@ -375,6 +375,6 @@ INSTANTIATE_TYPED_TEST_CASE_P(My, TrimmedTest, TrimTypes);
 // that library at all and consequently complain about missing entry
 // point defined in that library (fatal error LNK1561: entry point
 // must be defined). This dummy test keeps gtest_main linked in.
-TEST(DummyTest, TypedTestsAreNotSupportedOnThisPlatform) { }
+TEST(DummyTest, TypedTestsAreNotSupportedOnThisPlatform) {}
 
 #endif  // #if !defined(GTEST_HAS_TYPED_TEST) && !defined(GTEST_HAS_TYPED_TEST_P)
