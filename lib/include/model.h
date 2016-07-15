@@ -9,6 +9,24 @@
 extern "C" {
 #endif
 
+#include <sys/file.h>
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+
+typedef struct Trace {
+    unsigned int address;
+    char mode;
+} *trace;
+
+struct trace_tail_queue {
+    trace t;
+    STAILQ_ENTRY(trace_tail_queue) entries;    /* Tail queue. */
+} *n1, *n2, *n3, *np;
+
+//STAILQ_HEAD(stailhead, trace_tail_queue) head =
+//        STAILQ_HEAD_INITIALIZER(head);
+
 void init_model();
 
 void destruct_model();

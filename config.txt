@@ -1,5 +1,6 @@
 {BUILD_DIR _build}
 {PROJECT_NAME vmsim}
+{PROJECT_LIBS_NAME ProjectLibs}
 {TEST_SUITE_NAME TestSuite}
 {BUILD_SCRIPT_FILE ./build.tcl}
 {TEST_SCRIPT_FILE ./test.tcl}

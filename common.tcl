@@ -1,5 +1,8 @@
 #! /usr/bin/env tclsh8.5
 
+# source for cf_read and cf_write:
+# http://stackoverflow.com/questions/8054739/need-a-tcl-library-to-read-write-configuration-files
+
 proc cf_read fname {
   set fd [open $fname]
   chan config $fd -encoding utf-8
@@ -20,15 +23,57 @@ proc cf_write {fname args} {
   close $fd
 }
 
+proc clean_build {} {
+  exec rm -rf _build\ config.txt
+}
+
+proc clean_logs {} {
+  exec rm -rf config.log test.log _build\build.log
+}
+
+# could be used to pass clean argument to delete the build folder need to improve the handling of the switch case
+if { $::argc > 0 } {
+    set i 1
+    foreach arg $::argv {
+        puts "argument $i is $arg"
+        switch $arg {
+           -c {
+              # then I should delete the config file and the build directory
+              puts "Cleaning up build files"
+              clean_build
+           }
+           -l {
+              puts "Cleaning up logs"
+              clean_logs
+           }
+           default {
+              puts "Nothing found. Ingoring flag."
+           }
+        }
+        incr i
+    }
+} else {
+    puts "No command line argument passed."
+}
+
 set cfile [file join [file dir [info script]] config.txt]
+
+set chan [open config.log a]
+set timestamp [clock format [clock seconds]]
+puts $chan "$timestamp\n"
 
 if {[file exists config.txt]} {
   # this is a directory
+  puts $chan "Found existing config file..."
 } else {
   # not a directory
+  puts $chan "New configuation file created..."
+
     set BUILD_DIR _build
 
     set PROJECT_NAME vmsim
+
+    set PROJECT_LIBS_NAME ProjectLibs
 
     set TEST_SUITE_NAME TestSuite
 
@@ -43,16 +88,13 @@ if {[file exists config.txt]} {
   cf_write $cfile BUILD_DIR PROJECT_NAME TEST_SUITE_NAME BUILD_SCRIPT_FILE TEST_SCRIPT_FILE TEST_EXE MAIN_EXE
 }
 
-set chan [open config.log a]
-set timestamp [clock format [clock seconds]]
-puts $chan "$timestamp\n"
-
 puts $chan "Reading in configuation file..."
 foreach entry [cf_read $cfile] {
   lassign $entry name value
   set $name $value
-#  set
+    #  set
   puts $chan "$name: $value"
 }
 puts $chan "\n"
+
 close $chan

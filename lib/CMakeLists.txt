@@ -5,35 +5,33 @@ set(CMAKE_MACOSX_RPATH 1)
 # Define helper functions and macros used by Google Test.
 #include(../test/lib/googletest/cmake/internal_utils.cmake)
 
-project(ProjectLibs CXX C)
+project(${PROJECT_LIBS_NAME} CXX C)
 
 #config_compiler_and_linker()  # Defined in internal_utils.cmake.
 
 # Where Project_1's .h files can be found.
 include_directories(
-        ${ProjectLibs_SOURCE_DIR}/include
-        ${ProjectLibs_SOURCE_DIR})
+        ${${PROJECT_LIBS_NAME}_SOURCE_DIR}/include
+        ${${PROJECT_LIBS_NAME}_SOURCE_DIR})
 
 # Where Project_1's libraries can be found.
-link_directories(${ProjectLibs_BINARY_DIR}/src)
+link_directories(${${PROJECT_LIBS_NAME}_BINARY_DIR}/src)
 
 ########################################################################
 #
 # Defines the lib libraries.  User tests should link
 # with one of them.
+file(GLOB_RECURSE sources *.c)
+file(GLOB_RECURSE headers *.h)
+message(STATUS "sources = ${sources}")
+message(STATUS "headers = ${headers}")
 
-# Project_1 libraries.  We build them using more strict warnings than what
-# are used for other targets, to ensure that gtest can be compiled by a user
-# aggressive about warnings.
-add_library(ProjectLibs STATIC
-        src/controller.c
-        include/controller.h
-        src/view.c
-        include/view.h
-        src/model.c
-        include/model.h)
+# Project libraries.
+add_library(${PROJECT_LIBS_NAME} STATIC
+        ${headers}
+        ${sources})
 
-SET_TARGET_PROPERTIES(ProjectLibs PROPERTIES LINKER_LANGUAGE C)
+SET_TARGET_PROPERTIES(${PROJECT_LIBS_NAME} PROPERTIES LINKER_LANGUAGE C)
 
 #cxx_library(Project_1_lib "${cxx_strict}" src/syscalls.c)
 #target_link_libraries(Project_1_lib)

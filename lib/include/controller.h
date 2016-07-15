@@ -12,6 +12,8 @@ extern "C" {
 #include "view.h"
 #include "model.h"
 
+struct stailhead *read_trace_file(const char *file_name);
+
 void init_controller();
 
 void destruct_controller();

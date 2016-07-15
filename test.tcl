@@ -27,6 +27,7 @@ puts $chan "\n\n"
 
 close $chan
 
+# TODO: ensure that failing tests will result in failed execution of script
 proc searchResultsForPassed {result} {
     if {[lsearch -all -inline $result *PASSED*] >= 0} {
         return -code ok

@@ -1,4 +1,5 @@
 #! /usr/bin/env expect
+
 source /Users/school/pass.tcl
 
 set location [lindex $argv 0];
