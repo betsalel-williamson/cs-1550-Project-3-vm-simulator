@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.6.4)
 
-set(CMAKE_MACOSX_RPATH 1)
-
 # Define helper functions and macros used by Google Test.
 #include(../test/lib/googletest/cmake/internal_utils.cmake)
 

@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.6.4)
 
-set(CMAKE_BUILD_TYPE Debug)
-
 # read in configuration file
 function(read_configuration_file file_name)
     file(STRINGS ${file_name} FILE_CONTENTS)
@@ -20,6 +18,14 @@ function(read_configuration_file file_name)
 endfunction(read_configuration_file)
 
 read_configuration_file("config.txt")
+
+if(IN_CYGWIN)
+#    message(status "Set cmake legacy setting")
+    set(CMAKE_LEGACY_CYGWIN_WIN32 0)
+#else()
+#    message(status "Flag not set")
+endif()
+
 include_directories(".")
 
 add_subdirectory(lib)

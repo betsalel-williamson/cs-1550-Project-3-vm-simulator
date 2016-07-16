@@ -66,7 +66,7 @@ if {[file exists config.txt]} {
   # this is a directory
   puts $chan "Found existing config file..."
 } else {
-  # not a directory
+  # not a directory set defaults
   puts $chan "New configuation file created..."
 
     set BUILD_DIR _build
@@ -85,7 +85,14 @@ if {[file exists config.txt]} {
 
     set MAIN_EXE $BUILD_DIR/$PROJECT_NAME
 
-  cf_write $cfile BUILD_DIR PROJECT_NAME TEST_SUITE_NAME BUILD_SCRIPT_FILE TEST_SCRIPT_FILE TEST_EXE MAIN_EXE
+    set IN_CYGWIN 0
+
+    set CMAKE_BUILD_TYPE Debug
+
+    set CMAKE_MACOSX_RPATH 1
+
+# TODO this could be made into one list, but the issue was that these variables need to be set in addition to being written to the configuration file
+  cf_write $cfile BUILD_DIR PROJECT_NAME TEST_SUITE_NAME BUILD_SCRIPT_FILE TEST_SCRIPT_FILE TEST_EXE MAIN_EXE IN_CYGWIN CMAKE_BUILD_TYPE CMAKE_MACOSX_RPATH
 }
 
 puts $chan "Reading in configuation file..."

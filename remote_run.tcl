@@ -4,9 +4,10 @@
 
 ## passwords are stored on local computer and outside the project directory to protect information
 ## TODO: switch to alternate method of password storage and retreval using SSH keys
-source /Users/school/pass.tcl
+
 
 source common.tcl
+source $SECRET_FILE
 
 set timeout 20
 

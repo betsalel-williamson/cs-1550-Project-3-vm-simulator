@@ -7,3 +7,7 @@
 {TEST_EXE _build/test/mainTests/TestSuite}
 {MAIN_EXE _build/vmsim}
 {git_project_name cs-1550-Project-3-vm-simulator}
+{IN_CYGWIN 1}
+{CMAKE_BUILD_TYPE Debug}
+{CMAKE_MACOSX_RPATH 0}
+{SECRET_FILE "C:/cygwin64/home/Saul/pass.tcl"}
