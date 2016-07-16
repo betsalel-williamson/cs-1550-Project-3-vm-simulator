@@ -16,13 +16,11 @@ void destruct_controller() {
     destruct_view();
 }
 
-struct stailhead *read_trace_file(const char *file_name) {
-    STAILQ_HEAD(stailhead, trace_tail_queue) head	=
-            STAILQ_HEAD_INITIALIZER(head);
-    struct stailhead *headp = &head;		     /*	Singly-linked tail queue head. */
-    STAILQ_INIT(headp);		     /*	Initialize the queue. */
+struct trace_tail_queue *read_trace_file(const char *file_name) {
+    /*	Initialize the queue. */
+    TAILQ_INIT(&trace_tail_queue_head);
 
-    printf("Hello from inside read trace file\n");
+    print_debug(("Hello from inside read trace file\n"));
 
     unsigned int address;
     char mode;
@@ -36,26 +34,94 @@ struct stailhead *read_trace_file(const char *file_name) {
 
     while (true) {
         int ret = fscanf(fp, "%x %c", &address, &mode);
-        if(ret == 2){
-            n1	= malloc(sizeof(struct trace_tail_queue));	     /*	Insert at the tail. */
-            n1->t = malloc(sizeof(struct Trace));
-            n1->t->address = address;
-            n1->t->mode = mode;
-            STAILQ_INSERT_TAIL(headp, n1, entries);
+        if (ret == 2) {
+            /*	Insert at the tail. */
+            trace_tail_queue_entry = malloc(sizeof(struct Trace_tail_queue_entry));
+            trace_tail_queue_entry->t = malloc(sizeof(struct Trace));
+            trace_tail_queue_entry->t->address = address;
+            trace_tail_queue_entry->t->mode = mode;
+            TAILQ_INSERT_TAIL(&trace_tail_queue_head, trace_tail_queue_entry, entries);
         }
-        else if(errno != 0) {
+        else if (errno != 0) {
             perror("scanf:");
             break;
-        } else if(ret == EOF) {
+        } else if (ret == EOF) {
             break;
         } else {
             printf("No match.\n");
         }
     }
 
-    return NULL;
+    return &trace_tail_queue_head;
 }
 
+page_replacement_algorithm select_page_replacement_algorithm(option o) {
+    page_replacement_algorithm f;
 
+    switch (o){
+        case OPT:
+            f = optimal_page_replacement;
+            break;
+        case CLOCK:
+            f = enhanced_second_chance_algorithm;
+            break;
+        case AGING:
+            f = second_chance_page_replacement_algorithm;
+            break;
+        case LRU:
+            f = least_recently_used_algorithm;
+            break;
+        default:
+            print_debug(("Not using proper option."));
+            exit(EXIT_FAILURE);
+    }
 
+    return f;
+}
 
+// ask user for information
+
+program_results perform_algorithm(option o, struct trace_tail_queue *t ){
+    page_replacement_algorithm f;
+    f = select_page_replacement_algorithm(o);
+    program_results result = f(t);
+    return result;
+}
+
+usage_status get_usage_status(page p) {
+    return p->reference_bit << 1 | p->modify_bit;
+}
+
+program_results optimal_page_replacement(struct trace_tail_queue *ttqp) {
+
+    // replace the page that will not be used for the longest period of time
+
+    // algorithm implementation 1
+    // go from back to front
+    // for each Page_table_entry
+    // go from current entry to back until I see myself again
+    // the worst case is that I'm not used again and I go from front of queue to back of queue
+    // mark next use
+
+    // algorithm implementation 2
+    // go from front to back
+    // if room in frames add myself
+    // otherwise
+    // go through trace list
+    // for each item in frame increment if I see myself again
+    //
+
+    return 0;
+}
+
+program_results least_recently_used_algorithm(struct trace_tail_queue *ttqp) {
+    return 0;
+}
+
+program_results enhanced_second_chance_algorithm(struct trace_tail_queue *ttqp) {
+    return 0;
+}
+
+program_results second_chance_page_replacement_algorithm(struct trace_tail_queue *ttqp) {
+    return 0;
+}

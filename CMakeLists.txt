@@ -26,6 +26,8 @@ if(IN_CYGWIN)
 #    message(status "Flag not set")
 endif()
 
+#add_definitions(-DDEBUG)
+
 include_directories(".")
 
 add_subdirectory(lib)

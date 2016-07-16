@@ -5,17 +5,6 @@
 #include <lib/include/controller.h>
 #include "gtest/gtest.h"
 
-TEST(Library_tests, Open_zeroth_framebuffer) {
-    // opening this file will work
-
-    int actual = 1; //foo();
-//    int expected = 0;
-
-//    printf("Opened filedesc: %d\n", filedesc);
-
-    ASSERT_EQ(1, actual);
-}
-
 // ./vmsim –n <numframes> -a <opt|clock|aging|lru> [-r <refresh>] <tracefile>
 
 // test num frames
@@ -35,9 +24,53 @@ TEST(Library_tests, Open_zeroth_framebuffer) {
 TEST(Control_tests, Read_file_Test) {
 
     // open file
-    read_trace_file(
+    trace_tail_queue *result = read_trace_file(
             "/Users/school/Box Sync/Courses/- CS 1550/projects/3/cs-1550-Project-3-vm-simulator/downloads/gcc.trace");
 
-    printf("Hello from inside read file test\n");
-    //
+    int i = 0;
+    TAILQ_FOREACH(trace_tail_queue_entry, result, entries) {
+        i++;
+    }
+
+    int TRACE_TAIL_QUEUE_ENTRY_COUNT = 1000000;
+
+    ASSERT_EQ(TRACE_TAIL_QUEUE_ENTRY_COUNT, i);
+
+    print_debug(("Hello from inside read file test %d\n", i));
+}
+
+TEST(Control_tests, Get_status_recently_used_and_modified) {
+
+    Page_table_entry *p = (Page_table_entry *) malloc(sizeof(Page_table_entry));
+    p->reference_bit = 1;
+    p->modify_bit = 1;
+
+    ASSERT_EQ(RECENTLY_USED_AND_MODIFIED, get_usage_status(p));
+}
+
+TEST(Control_tests, Get_status_recently_used_and_not_modified) {
+
+    Page_table_entry *p = (Page_table_entry *) malloc(sizeof(Page_table_entry));
+    p->reference_bit = 1;
+    p->modify_bit = 0;
+
+    ASSERT_EQ(RECENTLY_USED_AND_NOT_MODIFIED, get_usage_status(p));
+}
+
+TEST(Control_tests, Get_status_not_recently_used_and_modified) {
+
+    Page_table_entry *p = (Page_table_entry *) malloc(sizeof(Page_table_entry));
+    p->reference_bit = 0;
+    p->modify_bit = 1;
+
+    ASSERT_EQ(NOT_RECENTLY_USED_AND_MODIFIED, get_usage_status(p));
+}
+
+TEST(Control_tests, Get_status_not_recently_used_and_not_modified) {
+
+    Page_table_entry *p = (Page_table_entry *) malloc(sizeof(Page_table_entry));
+    p->reference_bit = 0;
+    p->modify_bit = 0;
+
+    ASSERT_EQ(NOT_RECENTLY_USED_AND_NOT_MODIFIED, get_usage_status(p));
 }
