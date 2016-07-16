@@ -27,6 +27,7 @@ if(IN_CYGWIN)
 endif()
 
 #add_definitions(-DDEBUG)
+add_definitions(-DTRACE_FILE_LOCATION=${TRACE_FILE_LOCATION})
 
 include_directories(".")
 

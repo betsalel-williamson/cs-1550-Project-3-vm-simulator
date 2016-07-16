@@ -91,6 +91,8 @@ if {[file exists config.txt]} {
 
     set CMAKE_MACOSX_RPATH 1
 
+    set TRACE_FILE_LOCATION 1
+
 # TODO this could be made into one list, but the issue was that these variables need to be set in addition to being written to the configuration file
   cf_write $cfile BUILD_DIR PROJECT_NAME TEST_SUITE_NAME BUILD_SCRIPT_FILE TEST_SCRIPT_FILE TEST_EXE MAIN_EXE IN_CYGWIN CMAKE_BUILD_TYPE CMAKE_MACOSX_RPATH
 }

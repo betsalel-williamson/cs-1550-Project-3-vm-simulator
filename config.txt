@@ -10,4 +10,5 @@
 {IN_CYGWIN 1}
 {CMAKE_BUILD_TYPE Debug}
 {CMAKE_MACOSX_RPATH 0}
-{SECRET_FILE "C:/cygwin64/home/Saul/pass.tcl"}
+{SECRET_FILE "/Users/school/pass.tcl"}
+{TRACE_FILE_LOCATION "/Users/school/Box Sync/Courses/- CS 1550/projects/3/cs-1550-Project-3-vm-simulator/downloads/gcc.trace"}

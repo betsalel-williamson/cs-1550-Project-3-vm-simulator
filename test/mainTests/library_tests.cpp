@@ -21,11 +21,14 @@
 
 // test read tracefile
 
+#ifndef TRACE_FILE_LOCATION
+#define TRACE_FILE_LOCATION "/Users/school/Box Sync/Courses/- CS 1550/projects/3/cs-1550-Project-3-vm-simulator/downloads/gcc.trace"
+#endif
+
 TEST(Control_tests, Read_file_Test) {
 
     // open file
-    trace_tail_queue *result = read_trace_file(
-            "/Users/school/Box Sync/Courses/- CS 1550/projects/3/cs-1550-Project-3-vm-simulator/downloads/gcc.trace");
+    trace_tail_queue *result = read_trace_file(TRACE_FILE_LOCATION);
 
     int i = 0;
     TAILQ_FOREACH(trace_tail_queue_entry, result, entries) {
