@@ -1,42 +1,58 @@
 cmake_minimum_required(VERSION 2.6.4)
 
-# Define helper functions and macros used by Google Test.
-#include(../test/lib/googletest/cmake/internal_utils.cmake)
+#/*
+# * MIT License
+# *
+# * Copyright (c) 2016 Betsalel "Saul" Williamson
+# *
+# * contact: saul.williamson@pitt.edu
+# *
+# * Permission is hereby granted, free of charge, to any person obtaining a copy
+# * of this software and associated documentation files (the "Software"), to deal
+# * in the Software without restriction, including without limitation the rights
+# * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# * copies of the Software, and to permit persons to whom the Software is
+# * furnished to do so, subject to the following conditions:
+# *
+# * The above copyright notice and this permission notice shall be included in all
+# * copies or substantial portions of the Software.
+# *
+# * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# * SOFTWARE.
+# */
 
 project(${PROJECT_LIBS_NAME} CXX C)
 
-#config_compiler_and_linker()  # Defined in internal_utils.cmake.
-
-# Where Project_1's .h files can be found.
+# Where Project's .h files can be found.
 include_directories(
         ${${PROJECT_LIBS_NAME}_SOURCE_DIR}/include
         ${${PROJECT_LIBS_NAME}_SOURCE_DIR})
 
-# Where Project_1's libraries can be found.
+# Where Project's source files can be found.
 link_directories(${${PROJECT_LIBS_NAME}_BINARY_DIR}/src)
 
 ########################################################################
-#
-# Defines the lib libraries.  User tests should link
-# with one of them.
-#file(GLOB_RECURSE sources *.c)
-#file(GLOB_RECURSE headers *.h)
+# Defines the libraries.
+file(GLOB_RECURSE sources *.c)
+file(GLOB_RECURSE headers *.h)
 #message(STATUS "sources = ${sources}")
 #message(STATUS "headers = ${headers}")
 
 # Project libraries.
 add_library(${PROJECT_LIBS_NAME} STATIC
-        include/model.h
-        include/view.h
-        include/controller.h
-
-        src/model.c
-        src/view.c
-        src/controller.c)
-#        ${headers}
-#        ${sources})
+#        include/model.h
+#        include/view.h
+#        include/controller.h
+#
+#        src/model.c
+#        src/view.c
+#        src/controller.c)
+        ${headers}
+        ${sources})
 
 SET_TARGET_PROPERTIES(${PROJECT_LIBS_NAME} PROPERTIES LINKER_LANGUAGE C)
-
-#cxx_library(Project_1_lib "${cxx_strict}" src/syscalls.c)
-#target_link_libraries(Project_1_lib)
