@@ -6,3 +6,4 @@
 {TEST_SCRIPT_FILE ./test.tcl}
 {TEST_EXE _build/test/mainTests/TestSuite}
 {MAIN_EXE _build/vmsim}
+{git_project_name cs-1550-Project-3-vm-simulator}

@@ -13,6 +13,7 @@ extern "C" {
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <sys/queue.h>
 
 typedef struct Trace {
     unsigned int address;
