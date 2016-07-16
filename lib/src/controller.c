@@ -1,20 +1,58 @@
 //
 // Created by School on 7/2/16.
 //
-#include <sys/errno.h>
-#include <stdbool.h>
 #include "controller.h"
 
+typedef int milliseconds;
 
-void init_controller() {
-    init_model();
-    init_view();
+void init_controller(int i, char **pString) {
+    // get from input:
+    int count;
+    int frame_count = 0;
+    algorithm_option option = 0;
+    milliseconds refresh_rate = -1;
+    const char *tracefile_uri = NULL;
+
+    // Display each command-line argument.
+    print_debug(("\nCommand-line arguments:\n"));
+    for (count = 0; count < i; count++) {
+        print_debug(("  argv[%d]   %s\n", count, pString[count]));
+
+        if (strcmp(pString[count], "-n") == 0) {
+            count++;
+            frame_count = (int) pString[count];
+        } else if (strcmp(pString[count], "-a") == 0) {
+            count++;
+            if (strcmp(pString[count], OPT_STRING) == 0) {
+                option = OPT;
+            } else if (strcmp(pString[count], CLOCK_STRING) == 0) {
+                option = CLOCK;
+            } else if (strcmp(pString[count], AGING_STRING) == 0) {
+                option = AGING;
+            } else if (strcmp(pString[count], LRU_STRING) == 0) {
+                option = LRU;
+            }
+        } else if (strcmp(pString[count], "-r") == 0) {
+            count++;
+            refresh_rate = (int) pString[count];
+        } else if (count + 1 == i) {
+            tracefile_uri = pString[count];
+        }
+    }
+
+    struct singleton *instance = get_instance();
+
+    instance->t = read_trace_file(tracefile_uri);
+    instance->d->refresh_interval_ns = refresh_rate * 1000;
+    instance->d->frame_count = frame_count;
+    instance->o = option;
 }
 
 void destruct_controller() {
     destruct_model();
-    destruct_view();
 }
+
+void insert_into_trace_tail_queue(unsigned int address, char mode);
 
 struct trace_tail_queue *read_trace_file(const char *file_name) {
     /*	Initialize the queue. */
@@ -28,19 +66,14 @@ struct trace_tail_queue *read_trace_file(const char *file_name) {
     FILE *fp;
 
     if ((fp = fopen(file_name, "r")) == NULL) {
-        printf("No such file '%s'\n", file_name);
-        exit(1);
+        print_debug(("No such file '%s'\n", file_name));
+        exit(EXIT_FAILURE);
     }
 
     while (true) {
         int ret = fscanf(fp, "%x %c", &address, &mode);
         if (ret == 2) {
-            /*	Insert at the tail. */
-            trace_tail_queue_entry = malloc(sizeof(struct Trace_tail_queue_entry));
-            trace_tail_queue_entry->t = malloc(sizeof(struct Trace));
-            trace_tail_queue_entry->t->address = address;
-            trace_tail_queue_entry->t->mode = mode;
-            TAILQ_INSERT_TAIL(&trace_tail_queue_head, trace_tail_queue_entry, entries);
+            insert_into_trace_tail_queue(address, mode);
         }
         else if (errno != 0) {
             perror("scanf:");
@@ -48,17 +81,17 @@ struct trace_tail_queue *read_trace_file(const char *file_name) {
         } else if (ret == EOF) {
             break;
         } else {
-            printf("No match.\n");
+            print_debug(("No match.\n"));
         }
     }
 
     return &trace_tail_queue_head;
 }
 
-page_replacement_algorithm select_page_replacement_algorithm(option o) {
+page_replacement_algorithm select_page_replacement_algorithm(algorithm_option o) {
     page_replacement_algorithm f;
 
-    switch (o){
+    switch (o) {
         case OPT:
             f = optimal_page_replacement;
             break;
@@ -72,16 +105,16 @@ page_replacement_algorithm select_page_replacement_algorithm(option o) {
             f = least_recently_used_algorithm;
             break;
         default:
-            print_debug(("Not using proper option."));
+            print_debug(("Not using proper algorithm_option."));
             exit(EXIT_FAILURE);
     }
 
     return f;
 }
 
-// ask user for information
+// TODO: create function to  ask user for information
 
-program_results perform_algorithm(option o, struct trace_tail_queue *t ){
+program_results perform_algorithm(algorithm_option o, struct trace_tail_queue *t) {
     page_replacement_algorithm f;
     f = select_page_replacement_algorithm(o);
     program_results result = f(t);
@@ -94,6 +127,7 @@ usage_status get_usage_status(page p) {
 
 program_results optimal_page_replacement(struct trace_tail_queue *ttqp) {
 
+    struct singleton *instance = get_instance();
     // replace the page that will not be used for the longest period of time
 
     // algorithm implementation 1
@@ -109,7 +143,8 @@ program_results optimal_page_replacement(struct trace_tail_queue *ttqp) {
     // otherwise
     // go through trace list
     // for each item in frame increment if I see myself again
-    //
+    // while there is a tie for lowest number continue
+    // when I have a single lowest number than that is the one to evict
 
     return 0;
 }

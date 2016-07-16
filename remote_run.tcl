@@ -29,6 +29,9 @@ expect \
     "$server" { send "./run.tcl\r" }
 
 expect \
+    "$server" { send "cat test.log\r" }
+
+expect \
     "$server" { send "exit\r" }
 
 interact

@@ -9,14 +9,13 @@
 extern "C" {
 #endif
 
-#include "view.h"
+#pragma once
+#include <sys/errno.h>
+#include <stdbool.h>
+#include <string.h>
 #include "model.h"
 
-struct trace_tail_queue *read_trace_file(const char *file_name);
-
-usage_status get_usage_status(page p);
-
-void init_controller();
+void init_controller(int i, char **pString);
 
 void destruct_controller();
 
@@ -24,6 +23,10 @@ program_results optimal_page_replacement(struct trace_tail_queue *ttqp);
 program_results least_recently_used_algorithm(struct trace_tail_queue *ttqp);
 program_results enhanced_second_chance_algorithm(struct trace_tail_queue *ttqp);
 program_results second_chance_page_replacement_algorithm(struct trace_tail_queue *ttqp);
+
+struct trace_tail_queue *read_trace_file(const char *file_name);
+
+usage_status get_usage_status(page p);
 
 #ifdef __cplusplus
 }

@@ -3,14 +3,17 @@ cmake_minimum_required(VERSION 2.6.4)
 # read in configuration file
 function(read_configuration_file file_name)
     file(STRINGS ${file_name} FILE_CONTENTS)
-    string(REGEX MATCHALL "([^ {}]+ [^ {}]+)" VariableList "${FILE_CONTENTS}")
+    string(REGEX MATCHALL "([^ {}]+ [^{}]+)" VariableList "${FILE_CONTENTS}")
     message(STATUS "Loading configuration file...\n")
     foreach (NameAndValue ${VariableList})
         #    message(STATUS "NameAndValue = ${NameAndValue}")
-        # Find variable name
+#        # Find variable name
+#        string(LENGTH ${NameAndValue} len)
+#        string(FIND ${NameAndValue} " " num)
+#        message(STATUS "${NameAndValue} num=${num} len=${len}")
         string(REGEX MATCH "^[^ ]+" Name ${NameAndValue})
         # Find the value
-        string(REGEX MATCH "[^ ]+$" Value ${NameAndValue})
+        string(REGEX MATCH "([\"].+)$|([^ ]+)$" Value ${NameAndValue})
         # Set the variable
         set(${Name} "${Value}" PARENT_SCOPE)
         message(STATUS "{${Name} : ${Value}}")
@@ -19,12 +22,12 @@ endfunction(read_configuration_file)
 
 read_configuration_file("config.txt")
 
-if(IN_CYGWIN)
-#    message(status "Set cmake legacy setting")
+if (IN_CYGWIN)
+    #    message(status "Set cmake legacy setting")
     set(CMAKE_LEGACY_CYGWIN_WIN32 0)
-#else()
-#    message(status "Flag not set")
-endif()
+    #else()
+    #    message(status "Flag not set")
+endif ()
 
 #add_definitions(-DDEBUG)
 add_definitions(-DTRACE_FILE_LOCATION=${TRACE_FILE_LOCATION})

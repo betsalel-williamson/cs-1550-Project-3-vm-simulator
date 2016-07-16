@@ -5,11 +5,14 @@
 #include <stdio.h>
 #include "view.h"
 
-void init_view() {
+void init_view(int i, char **pString) {
+
+    init_controller(i, pString);
+
     printf("Hello World");
 }
 
 void destruct_view() {
-
+    destruct_controller();
 }
 

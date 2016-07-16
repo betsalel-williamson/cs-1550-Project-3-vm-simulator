@@ -5,14 +5,14 @@
 //#include <sys/param.h>
 #include <stdlib.h>
 #include <signal.h>
-#include "controller.h"
+#include "view.h"
 
 /**
  * Handle quit to correctly exit and restore state on CTR-C.
  */
 void sig_handler(int signo) {
 
-    destruct_controller();
+    destruct_view();
 
     if (signo == SIGINT) {
         exit(EXIT_SUCCESS);
@@ -21,12 +21,14 @@ void sig_handler(int signo) {
     }
 }
 
+//./vmsim –n <numframes> -a <opt|clock|aging|lru> [-r <refresh>] <tracefile>
+
 int main(int argc, char **argv) {
     signal(SIGINT, sig_handler);
 
-    init_controller();
+    init_view(argc, argv);
 
-    destruct_controller();
+    destruct_view();
 
     return 0;
 }

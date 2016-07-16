@@ -9,7 +9,11 @@
 extern "C" {
 #endif
 
-void init_view();
+#pragma once
+
+#include "controller.h"
+
+void init_view(int i, char **pString);
 
 void destruct_view();
 
