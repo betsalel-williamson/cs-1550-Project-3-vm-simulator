@@ -40,19 +40,13 @@ link_directories(${${PROJECT_LIBS_NAME}_BINARY_DIR}/src)
 # Defines the libraries.
 file(GLOB_RECURSE sources *.c)
 file(GLOB_RECURSE headers *.h)
-#message(STATUS "sources = ${sources}")
-#message(STATUS "headers = ${headers}")
+message(STATUS "sources = ${sources}")
+message(STATUS "headers = ${headers}")
 
 # Project libraries.
 add_library(${PROJECT_LIBS_NAME} STATIC
-#        include/model.h
-#        include/view.h
-#        include/controller.h
-#
-#        src/model.c
-#        src/view.c
-#        src/controller.c)
         ${headers}
-        ${sources})
+        ${sources}
+        )
 
 SET_TARGET_PROPERTIES(${PROJECT_LIBS_NAME} PROPERTIES LINKER_LANGUAGE C)

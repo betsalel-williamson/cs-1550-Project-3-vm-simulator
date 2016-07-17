@@ -27,6 +27,8 @@
 #include "view.h"
 
 
+pthread_mutex_t draw_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 void *controller_thread(void *ptr){
     
     struct Args * args = (struct Args *) ptr;
@@ -34,7 +36,11 @@ void *controller_thread(void *ptr){
     // not thread safe
     init_controller(args->argc, args->argv);
     
-    return NULL;
+    singleton instance = get_instance();
+    
+    instance->completed = true;
+    
+    pthread_exit((void*) 0);
 }
 
 void sleep_ms(long ms) {
@@ -53,28 +59,51 @@ void sleep_ms(long ms) {
 int my_clock = 0;
 void *increment_clock_thread(void *ptr) {
     
-    while (true) {
+    singleton instance = get_instance();
+    
+    while (!instance->completed) {
         my_clock += 1;
         sleep_ms(1000);
     }
     
     //    return &my_clock;
+    pthread_exit((void*) 0);
 }
 
-void init_view(struct Args * args ) {
+void draw_initial_information (int argc, char ** argv){
+    int count;
+    for (count = 0; count < argc; count++) {
+        printf("  argv[%d]   %s\n", count, argv[count]);
+    }
+}
+
+void clear_screen() {
+    const char msg[] = "\033[2J";
+    syscall(4, STDOUT_FILENO, msg, sizeof(msg) - 1);
+}
+
+void draw(struct Args * args) {
+    pthread_mutex_lock (&draw_mutex);
+//    clear_screen();
+//    draw_initial_information(args->argc,args->argv);
+//    display_results();
+    pthread_mutex_unlock (&draw_mutex);
+}
+
+void init_view(args arguments) {
     
     pthread_t draw_pthread, controller_pthread, clock_thread;
     
     int iret1, iret2, iret6;
     
-    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, NULL);
+    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
     
     if (iret1) {
         fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
         exit(EXIT_FAILURE);
     }
     
-    iret2 = pthread_create(&controller_pthread, NULL, controller_thread, (void *) args);
+    iret2 = pthread_create(&controller_pthread, NULL, controller_thread, (void *) arguments);
     
     if (iret2) {
         fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
@@ -87,52 +116,39 @@ void init_view(struct Args * args ) {
         exit(EXIT_FAILURE);
     }
     
-    char mystring[100];
-    bool quit = false;
-    while (quit == false) {
+    singleton instance = get_instance();
+    instance->completed = false;
+    while (!instance->completed) {
         
-        fgets(mystring, 100, stdin);
-        
-        
-        if (toupper(mystring[0]) != 'Q') {
-            quit = false;
-        } else {
-            quit = true;
-        }
     }
     
+    draw(arguments);
+    
+    destruct_view();
 }
 
 void destruct_view() {
     destruct_controller();
 }
 
-void clear_screen() {
-    const char msg[] = "\033[2J";
-    syscall(4, STDOUT_FILENO, msg, sizeof(msg) - 1);
-}
-
-
-
-void draw() {
-    clear_screen();
-    
-    display_results();
-}
-
 #define REFRESH_RATE 100
 
 void *draw_thread(void *ptr) {
-    while (true) {
-        draw();
+    
+    struct Args * args = (struct Args *) ptr;
+    
+    singleton instance = get_instance();
+    
+    while (!instance->completed) {
         sleep_ms(REFRESH_RATE);
+        draw(args);
     }
+    
+    pthread_exit((void*) 0);
 }
 
-
-
 void display_results() {
-    singleton instance =     get_instance();
+    singleton instance = get_instance();
     
     //    Algorithm: Clock
     //    Number of frames:       8
@@ -141,7 +157,7 @@ void display_results() {
     //    Total writes to disk:   29401
     
     printf("\n%-32s\n\n", algorithmStrings[instance->o]);
-    printf("%-22s%10u\n", "Lines read:", instance->files_read);
+    printf("%-22s%10u\n", "Lines read:", instance->lines_read);
     printf("%-22s%10d\n", "Number of frames:", instance->d->frame_count);
     printf("%-22s%10li\n", "Total memory accesses:", instance->d->access_count);
     printf("%-22s%10li\n", "Total page faults:", instance->d->fault_count);

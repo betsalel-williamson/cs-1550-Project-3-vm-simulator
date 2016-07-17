@@ -1,15 +1,11 @@
 {BUILD_DIR _build}
 {PROJECT_NAME vmsim}
-{PROJECT_LIBS_NAME ProjectLibs}
 {TEST_SUITE_NAME TestSuite}
 {BUILD_SCRIPT_FILE ./build.tcl}
 {TEST_SCRIPT_FILE ./test.tcl}
 {TEST_EXE _build/test/mainTests/TestSuite}
-{MAIN_EXE /Users/school/Library/Developer/Xcode/DerivedData/project3-doijwfvufrubnlaiqfzjkrrughkd/Build/Products/Debug/project3}
-{git_project_name cs-1550-Project-3-vm-simulator}
-{IN_CYGWIN 1}
+{MAIN_EXE /Users/school/Library/Developer/Xcode/DerivedData/project3-doijwfvufrubnlaiqfzjkrrughkd/Build/Products/Debug/project3 }
+{IN_CYGWIN 0}
 {CMAKE_BUILD_TYPE Debug}
-{CMAKE_MACOSX_RPATH 0}
-{SECRET_FILE "/Users/school/pass.tcl"}
+{CMAKE_MACOSX_RPATH 1}
 {TRACE_FILE_LOCATION "/Users/school/Box Sync/Courses/- CS 1550/projects/3/cs-1550-Project-3-vm-simulator/downloads/gcc.trace"}
-{TRACE_FILE_LOCATION2 "/Users/school/Box Sync/Courses/- CS 1550/projects/3/cs-1550-Project-3-vm-simulator/downloads/swim.trace"}

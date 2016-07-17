@@ -9,11 +9,15 @@
 #ifndef __project3__controller__
 #define __project3__controller__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <sys/errno.h>
 #include <stdbool.h>
 #include <string.h>
-
+#include "radix-tree.h"
 #include "model.h"
 #include "view.h"
 
@@ -23,14 +27,14 @@ void destruct_controller();
 
 struct trace_tail_queue *read_trace_file(const char *file_name);
 
-typedef int algorithm_option;
+//typedef int algorithm_option;
 
 //typedef void (*page_replacement_algorithm)();
-
+//
 //page_replacement_algorithm select_page_replacement_algorithm(algorithm_option o);
 
-typedef int usage_status;
-
-usage_status get_usage_status(struct Page_table_entry * p);
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* defined(__project3__controller__) */

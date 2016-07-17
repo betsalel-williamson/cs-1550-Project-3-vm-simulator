@@ -10,6 +10,8 @@
 #define __project3__second_chance_page_replacement_algorithm__
 
 #include <stdio.h>
+#include <assert.h>
+
 #include "model.h"
 #include "view.h"
 #include "controller.h"

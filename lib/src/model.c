@@ -33,16 +33,21 @@ const char *algorithmStrings[] = {
     LRU_STRING
 };
 
+pthread_mutex_t instance_mutex = PTHREAD_MUTEX_INITIALIZER;;
+
+
 singleton get_instance() {
-//    print_debug(("In get instance\n"));
+    //    print_debug(("In get instance\n"));
     static singleton instance = NULL;
+    
+    pthread_mutex_lock (&instance_mutex);
     
     if (instance == NULL) {
         
         // get map for struct
         instance = (singleton) calloc(1, sizeof(struct Singleton));
         
-//        print_debug(("Calloc instance\n"));
+        //        print_debug(("Calloc instance\n"));
         
         // get map for disk
         instance->d = (disk) calloc(1, sizeof(struct Disk));
@@ -59,11 +64,13 @@ singleton get_instance() {
         instance->p->d = instance->d;
         instance->p->a = &instance->o;
         
-        instance->files_read = 0;
-
+        instance->lines_read = 0;
+        
+        instance->completed = false;
     } else {
-//        print_debug(("Trying to access instance\n"));
+        //        print_debug(("Trying to access instance\n"));
     }
+    pthread_mutex_unlock (&instance_mutex);
     
     return instance;
 }
@@ -90,38 +97,11 @@ void destruct_model() {
     destruct_trace_tail_queue();
 }
 
-
-void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int address, char mode, int position) {
-    /*	Insert at the tail. */
-    struct Trace_tail_queue_entry *t;
-
-    t = malloc(sizeof(struct Trace_tail_queue_entry));
-//    trace_tail_queue_entry->t = malloc(sizeof(struct Trace));
-    t->address = address;
-    t->mode = mode;
-    t->next_reference = 0xffffffff;
-    t->position = position;
-    
-    struct Trace_tail_queue_entry *t1;
-    unsigned int i = 0x01;
-    TAILQ_FOREACH_REVERSE(t1, head, trace_tail_queue, entries){
-        
-        if(t1->address == address){
-            t1->next_reference = i;
-            break;
-        }
-        
-        i++;
-    }
-    
-    TAILQ_INSERT_TAIL(head, t, entries);
-}
-
 void destruct_trace_tail_queue() {
     struct Trace_tail_queue_entry *n1 = TAILQ_FIRST(&trace_tail_queue_head), *n2;
     while (n1 != NULL) {
         n2 = TAILQ_NEXT(n1, entries);
-//        free(n1->t);
+        //        free(n1->t);
         free(n1);
         n1 = n2;
     }

@@ -19,7 +19,11 @@
 
 void display_results();
 
-void init_view(struct Args * args);
+typedef struct Args {
+    int argc; char **argv;
+} *args;
+
+void init_view(args arguments);
 
 void destruct_view();
 

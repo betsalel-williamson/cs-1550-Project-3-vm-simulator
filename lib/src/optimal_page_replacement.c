@@ -8,38 +8,21 @@
 
 #include "optimal_page_replacement.h"
 
-int mincount(struct Page_table_entry *frames[]){
-    int min = frames[0]->reference_bit;
-    int min_count = 1;
-    
-    singleton instance = get_instance();
-    
-    int j;
-    for (j = 1; j < instance->d->frame_count; j++) {
-        // for each item in frame increment if I see myself again
-        if (frames[j]->reference_bit < min) {
-            min = frames[j]->reference_bit;
-            min_count = 1;
-        } else if (frames[j]->reference_bit == min){
-            min_count++;
-        }
-    }
-
-    return min_count;
-}
-
-int sort(const void *x, const void *y) {
+int sort_next_reference(const void *x, const void *y) {
     
     int result;
-    struct Page_table_entry *orderA = (struct Page_table_entry *)x;
-    struct Page_table_entry *orderB = (struct Page_table_entry *)y;
+    struct Page_table_entry **orderA = (struct Page_table_entry **)x;
+    struct Page_table_entry **orderB = (struct Page_table_entry **)y;
     
-    unsigned int a = orderA->next_reference;
-    unsigned int b = orderB->next_reference;
+    struct Page_table_entry * oa = *orderA;
+    struct Page_table_entry * ob = *orderB;
+    
+    unsigned int a = oa->next_reference;
+    unsigned int b = ob->next_reference;
     
     if (a == b) {
         result = 0;
-    } else if (a>b) {
+    } else if (a > b) {
         result = -1;
     } else {
         result = 1;
@@ -48,27 +31,23 @@ int sort(const void *x, const void *y) {
     return result;
 }
 
+static page *frames;
+
 void optimal_page_replacement() {
     
     print_debug(("Inside optimal_page_replacement\n"));
     
     singleton instance = get_instance();
-    //
-    // create page_frames;
-    // this bit array failed. to use frames the whole way
-//        unsigned int A[134217727];     // This is our bit array (429496730/10 = 4294967300 bits !)
-//        int i;
-//        for ( i = 0; i < 134217727; i++ ){
-//            A[i] = 0;                    // Clear the bit array
-//        }
-    //
     
-    // need to preprocess to include the next occurance of the item in the linked list
+    frames = malloc(sizeof(page)*instance->d->frame_count);
     
-    struct Page_table_entry *frames[instance->d->frame_count];
     int k;
     for (k = 0; k < instance->d->frame_count; k++) {
-        frames[k] = NULL;
+        frames[k] = malloc(sizeof(struct Page_table_entry));
+        frames[k]->address = -1;
+        frames[k]->modify_bit = -1;
+        frames[k]->next_reference = -1;
+        frames[k]->reference_bit = -1;
     }
     
     // replace the page that will not be used for the longest period of time
@@ -81,73 +60,68 @@ void optimal_page_replacement() {
     // mark next use
     
     // algorithm implementation 2
-    unsigned int add;
-    char m;
-    
     // go from front to back
     TAILQ_FOREACH(trace_tail_queue_entry, instance->t, entries) {
         
-        add = trace_tail_queue_entry->address;
-        m = trace_tail_queue_entry->mode;
+//        printf("Add %8.8x Next ref %u\n", trace_tail_queue_entry->address , trace_tail_queue_entry->next_reference);
         
         int j;
         bool in_frame = false;
         for (j = 0; j < instance->d->frame_count; j++) {
             // for each item in frame increment if I see myself again
             
-            if (frames[j] == NULL){
-                frames[j] = calloc(1, sizeof(struct Page_table_entry));
-                frames[j]->address = add;
-                frames[j]->modify_bit = -1;
-                frames[j]->reference_bit = 1; // I'm in use
+            if (frames[j]->address == EMPTY){
+                frames[j]->address = trace_tail_queue_entry->address;
                 frames[j]->next_reference = trace_tail_queue_entry->next_reference; // I'm in use
+                frames[j]->reference_bit = trace_tail_queue_entry->position;
                 
-                // TODO: add to page faults
                 instance->d->fault_count++;
-                if (m == 'W') {
-//                    printf("%c", trace_tail_queue_entry->t->mode);
+                if (trace_tail_queue_entry->mode == 'W') {
                     instance->d->write_count++;
                 } else {
                     instance->d->read_count++;
                 }
                 in_frame = true;
                 break;
-            } else if (frames[j]->address == add) {
+            } else if (frames[j]->address == trace_tail_queue_entry->address) {
                 // I'm already in here and there's nothing left to do...
-                frames[j]->next_reference = trace_tail_queue_entry->next_reference; // I'm in use
+                
+                frames[j]->next_reference = trace_tail_queue_entry->next_reference;
+                if (trace_tail_queue_entry->mode == 'W') {
+                    instance->d->write_count++;
+                } else {
+                    instance->d->read_count++;
+                }
+                instance->d->hit_count++;
                 in_frame = true;
                 break;
             }
         }
         
         if (!in_frame) {
-
-//            printf("Add %8.8x Next ref %u\n", trace_tail_queue_entry->address , trace_tail_queue_entry->next_reference);
             
-            qsort(*frames, instance->d->frame_count, sizeof(struct Page_table_entry), sort);
-
-//            for (j = 0; j < instance->d->frame_count; j++) {
+            qsort(frames, instance->d->frame_count, sizeof(struct Page_table_entry *), sort_next_reference);
+//#ifdef _DEBUG
+//            int i;
+//            for (i = 0; i < instance->d->frame_count; i++) {
 //                // for each item in frame increment if I see myself again
 //                
-//                printf("[%d] Add %8.8x Next ref %u\n", j, frames[j]->address , frames[j]->next_reference);
+//                printf("[%d] pos: %u Add %8.8x Next ref %u\n", frames[i]->reference_bit, i, frames[i]->address , frames[i]->next_reference);
 //            }
-
-            // the largest to smallest
-            // when I have a single lowest number than that is the one to evict
-            frames[0]->address = add;
-            frames[0]->modify_bit = -1;
-            frames[0]->reference_bit = 1; // I'm in use
-            frames[0]->next_reference = trace_tail_queue_entry->next_reference; // I'm in use
+//#endif
             
-            // TODO: add to page faults
+            // the largest to smallest
+            // when I have a single highest number that is the one to evict
+            frames[0]->address = trace_tail_queue_entry->address;
+            frames[0]->next_reference = trace_tail_queue_entry->next_reference; // I'm in use
+            frames[0]->reference_bit = trace_tail_queue_entry->position;
+            
             instance->d->fault_count++;
-            if (m == 'W') {
-                //                    printf("%c", trace_tail_queue_entry->t->mode);
+            if (trace_tail_queue_entry->mode == 'W') {
                 instance->d->write_count++;
             } else {
                 instance->d->read_count++;
             }
-//            in_frame = true;
         }
         
         instance->d->access_count++;
@@ -155,8 +129,6 @@ void optimal_page_replacement() {
     
     int j;
     for (j = 0; j < instance->d->frame_count; j++) {
-        // for each item in frame increment if I see myself again
-        
         if (frames[j] != NULL){
             free(frames[j]);
             frames[j] = NULL;

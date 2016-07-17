@@ -10,6 +10,8 @@
 #define __project3__optimal_page_replacement__
 
 #include <stdio.h>
+#include <assert.h>
+
 #include "model.h"
 #include "view.h"
 #include "controller.h"

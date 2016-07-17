@@ -9,6 +9,10 @@
 #ifndef __project3__model__
 #define __project3__model__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <sys/mman.h>
 #include <sys/file.h>
@@ -16,14 +20,13 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <sys/queue.h>
+
 #include "optimal_page_replacement.h"
 #include "least_recently_used_algorithm.h"
 #include "second_chance_page_replacement_algorithm.h"
 #include "enhanced_second_chance_algorithm.h"
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
+
 
 #ifndef _DEBUG
 #define _DEBUG
@@ -34,8 +37,6 @@
 #else
 #define print_debug(s) do {} while (0)
 #endif
-
-
 
 #define MIN_ADDRESS 0
 #define MAX_ADDRESS 0xFFFFFFFF
@@ -66,17 +67,13 @@ extern const char *algorithmStrings[];
 
 typedef int milliseconds;
 
-struct Args {
-    int argc; char **argv;
-} *args;
-
 //typedef struct Trace {
 //    unsigned int address;
 //    char mode;
 //} *my_trace;
 
 struct Trace_tail_queue_entry {
-//    my_trace t;
+    struct Trace_tail_queue_entry * t;
     unsigned int address;
     char mode;
     unsigned int next_reference;
@@ -84,14 +81,14 @@ struct Trace_tail_queue_entry {
     TAILQ_ENTRY(Trace_tail_queue_entry) entries;
 } *trace_tail_queue_entry;
 
-TAILQ_HEAD(trace_tail_queue, Trace_tail_queue_entry) trace_tail_queue_head;
+TAILQ_HEAD(trace_tail_queue, Trace_tail_queue_entry) trace_tail_queue_head, *radix_tail_queue_head;
 
 #define	TAILQ_FOREACH_FROM(var, start, field)					\
 for ((var) = (start);				\
 (var);							\
 (var) = TAILQ_NEXT((var), field))
 
-void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int address, char mode, int position);
+void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int address, char mode, unsigned int position);
 
 void destruct_trace_tail_queue();
 
@@ -114,7 +111,21 @@ typedef struct Page_table_entry {
 
 
 struct Page_tail_queue_entry {
-    page p;
+//    page p;
+    unsigned int address;
+    unsigned int next_reference;
+    
+    //    long time_of_use; // could be used to store exact time-stamp information
+    //    int valid_bit; // not used in this program
+    int reference_bit;
+    // note that this is a single bit in enhanced_second_chance_algorithm
+    // in second_chance_page_replacement_algorithm this is variable, to be 8-bit in this project
+    // optimal_page_replacement and least_recently_used_algorithm don't use reference_bit information
+    int modify_bit;
+    // note that this is a single bit in enhanced_second_chance_algorithm
+    // the other algorithms will not use this
+//    SQ
+    
     TAILQ_ENTRY(Page_tail_queue_entry) entries;
 } *page_tail_queue_entry;
 
@@ -122,8 +133,21 @@ TAILQ_HEAD(page_tail_queue_entry, Page_tail_queue_entry) page_tail_queue_head;
 
 
 struct Page_circle_queue_entry {
-    page p;
-    TAILQ_ENTRY(Page_circle_queue_entry) entries;
+//    page p;
+    unsigned int address;
+    unsigned int next_reference;
+    
+    //    long time_of_use; // could be used to store exact time-stamp information
+    //    int valid_bit; // not used in this program
+    int reference_bit;
+    // note that this is a single bit in enhanced_second_chance_algorithm
+    // in second_chance_page_replacement_algorithm this is variable, to be 8-bit in this project
+    // optimal_page_replacement and least_recently_used_algorithm don't use reference_bit information
+    int modify_bit;
+    // note that this is a single bit in enhanced_second_chance_algorithm
+    // the other algorithms will not use this
+    //    SQ
+    CIRCLEQ_ENTRY(Page_circle_queue_entry) entries;
 } *page_circle_queue_entry;
 
 CIRCLEQ_HEAD(page_circle_queue_entry, Page_circle_queue_entry) page_circle_queue_head;
@@ -135,6 +159,9 @@ typedef struct Disk {
     long write_count;
     long read_count;
     long access_count; // == reads+writes
+//    long page_fault_no_eviction; couldn't understand from prompt how to use these
+//    long page_fault_evict_clean;
+//    long page_fault_evict_dirty;
     long hit_count;
     long fault_count;
     long refresh_interval_ns; // refresh interval in nano seconds
@@ -156,15 +183,7 @@ typedef int usage_status;
 #define NOT_RECENTLY_USED_AND_MODIFIED 1
 #define NOT_RECENTLY_USED_AND_NOT_MODIFIED 0
 
-typedef struct Singleton {
-    disk d;
-    struct trace_tail_queue *t;
-    algorithm_option o;
-    program_results p;
-    unsigned int files_read;
-} *singleton;
-
-singleton get_instance();
+extern pthread_mutex_t mutexsum;
 
 void init_model();
 
@@ -176,8 +195,21 @@ typedef void (*page_replacement_algorithm)();
 
 page_replacement_algorithm select_page_replacement_algorithm(algorithm_option o);
 
-//#ifdef __cplusplus
-//}
-//#endif
+typedef struct Singleton {
+    disk d;
+    struct trace_tail_queue *t;
+    algorithm_option o;
+    program_results p;
+    unsigned int lines_read;
+    bool completed;
+} *singleton;
+
+singleton get_instance();
+
+#define EMPTY -1
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* defined(__project3__model__) */

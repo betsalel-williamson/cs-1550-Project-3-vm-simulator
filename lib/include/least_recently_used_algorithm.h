@@ -14,6 +14,14 @@
 #include "view.h"
 #include "controller.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void least_recently_used_algorithm();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* defined(__project3__least_recently_used_algorithm__) */

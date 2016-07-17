@@ -14,6 +14,14 @@
 #include "view.h"
 #include "controller.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void enhanced_second_chance_algorithm();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* defined(__project3__enhanced_second_chance_algorithm__) */
