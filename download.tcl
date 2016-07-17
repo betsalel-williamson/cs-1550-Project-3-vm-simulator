@@ -26,7 +26,8 @@
 # * SOFTWARE.
 # */
 
-source /Users/school/pass.tcl
+source common.tcl
+source $SECRET_FILE
 
 set location [lindex $argv 0];
 

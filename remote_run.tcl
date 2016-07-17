@@ -31,7 +31,6 @@
 ## passwords are stored on local computer and outside the project directory to protect information
 ## TODO: switch to alternate method of password storage and retreval using SSH keys
 
-
 source common.tcl
 source $SECRET_FILE
 

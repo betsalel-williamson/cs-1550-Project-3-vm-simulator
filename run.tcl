@@ -1,4 +1,4 @@
-#! /usr/bin/env tclsh8.5
+#! /usr/bin/env expect
 
 #/*
 # * MIT License
@@ -28,36 +28,36 @@
 
 source common.tcl
 
-if {[file isdirectory $MAIN_EXE]} {
-  # this is a directory
-} else {
-  # not a directory
-  exec $BUILD_SCRIPT_FILE
-}
+#if {[file isdirectory $MAIN_EXE]} {
+#  # this is a directory
+#} else {
+#  # not a directory
+#  exec $BUILD_SCRIPT_FILE
+#}
+#
+#if { [catch {set result [exec $TEST_SCRIPT_FILE]} reason] } {
+#
+#    puts "Failed tests: $reason"
+#
+#} else {
+#
+#    if { [catch {set result [exec $MAIN_EXE]} reason] } {
+#
+#    puts "Failed main execution: $reason"
+#
+#    } else {
+#
+#    puts $result
+#
+#    }
+#}
 
-if { [catch {set result [exec $TEST_SCRIPT_FILE]} reason] } {
-
-    puts "Failed tests: $reason"
-
-} else {
-
-    if { [catch {set result [exec $MAIN_EXE]} reason] } {
-
-    puts "Failed main execution: $reason"
-
-    } else {
-
-    puts $result
-
-    }
-}
-
+puts $TRACE_FILE_LOCATION
 # start of end to end tests
 # need to run  multiple scenarios
 #./vmsim –n <numframes> -a <opt|clock|aging|lru> [-r <refresh>] <tracefile>
 #//  8, 16, 32, and 64
-set OPTIONS {
-    {-n 8 -a opt $TRACE_FILE_LOCATION}
+set OPTIONS { {-n 8 -a opt $TRACE_FILE_LOCATION} }
 #    {-n 16 -a opt $TRACE_FILE_LOCATION}
 #    {-n 32 -a opt $TRACE_FILE_LOCATION}
 #    {-n 64 -a opt $TRACE_FILE_LOCATION}
@@ -73,11 +73,10 @@ set OPTIONS {
 #    {-n 16 -a lru $TRACE_FILE_LOCATION}
 #    {-n 32 -a lru $TRACE_FILE_LOCATION}
 #    {-n 64 -a lru $TRACE_FILE_LOCATION}
-}
+#}
 
-set i 0
 foreach option $OPTIONS {
-    if { [catch {set result [exec $MAIN_EXE {*}$option]} reason] } {
+    if { [catch {set result [spawn $MAIN_EXE {*}[eval list $option]]} reason] } {
 
     puts "Failed main execution: $reason"
 
@@ -86,7 +85,6 @@ foreach option $OPTIONS {
     puts $result
 
     }
-
-    incr i
 }
 
+interact

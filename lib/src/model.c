@@ -26,28 +26,56 @@
 
 #include "model.h"
 
-struct singleton *get_instance() {
-    static struct singleton *instance = NULL;
+const char *algorithmStrings[] = {
+    OPT_STRING,
+    CLOCK_STRING,
+    AGING_STRING,
+    LRU_STRING
+};
 
+singleton get_instance() {
+//    print_debug(("In get instance\n"));
+    static singleton instance = NULL;
+    
     if (instance == NULL) {
-
+        
         // get map for struct
-        instance = (struct singleton *) malloc(sizeof(struct singleton));
-
+        instance = (singleton) calloc(1, sizeof(struct Singleton));
+        
+//        print_debug(("Calloc instance\n"));
+        
         // get map for disk
-        instance->d = (disk) malloc(sizeof(struct Disk));
-    }
+        instance->d = (disk) calloc(1, sizeof(struct Disk));
+        
+        instance->d->access_count = 0;
+        instance->d->fault_count = 0;
+        instance->d->frame_count = 0;
+        instance->d->hit_count = 0;
+        instance->d->read_count = 0;
+        instance->d->refresh_interval_ns = 0;
+        instance->d->write_count = 0;
+        
+        instance->p = (program_results) calloc(1, sizeof(struct Program_results));
+        instance->p->d = instance->d;
+        instance->p->a = &instance->o;
+        
+        instance->files_read = 0;
 
+    } else {
+//        print_debug(("Trying to access instance\n"));
+    }
+    
     return instance;
 }
 
 
 void destruct_instance() {
     // TODO find way to ensure that I'm not calling destruct when my instance hasn't been created yet? Not sure that is a big concern
-    struct singleton *instance = get_instance();
-
+    singleton instance = get_instance();
+    
     // unmap memory
     // need to destruct disk
+    free(instance->p);
     free(instance->d);
     free(instance);
 }
@@ -63,20 +91,37 @@ void destruct_model() {
 }
 
 
-void insert_into_trace_tail_queue(unsigned int address, char mode) {
+void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int address, char mode, int position) {
     /*	Insert at the tail. */
-    trace_tail_queue_entry = malloc(sizeof(struct Trace_tail_queue_entry));
-    trace_tail_queue_entry->t = malloc(sizeof(struct Trace));
-    trace_tail_queue_entry->t->address = address;
-    trace_tail_queue_entry->t->mode = mode;
-    TAILQ_INSERT_TAIL(&trace_tail_queue_head, trace_tail_queue_entry, entries);
+    struct Trace_tail_queue_entry *t;
+
+    t = malloc(sizeof(struct Trace_tail_queue_entry));
+//    trace_tail_queue_entry->t = malloc(sizeof(struct Trace));
+    t->address = address;
+    t->mode = mode;
+    t->next_reference = 0xffffffff;
+    t->position = position;
+    
+    struct Trace_tail_queue_entry *t1;
+    unsigned int i = 0x01;
+    TAILQ_FOREACH_REVERSE(t1, head, trace_tail_queue, entries){
+        
+        if(t1->address == address){
+            t1->next_reference = i;
+            break;
+        }
+        
+        i++;
+    }
+    
+    TAILQ_INSERT_TAIL(head, t, entries);
 }
 
 void destruct_trace_tail_queue() {
     struct Trace_tail_queue_entry *n1 = TAILQ_FIRST(&trace_tail_queue_head), *n2;
     while (n1 != NULL) {
         n2 = TAILQ_NEXT(n1, entries);
-        free(n1->t);
+//        free(n1->t);
         free(n1);
         n1 = n2;
     }

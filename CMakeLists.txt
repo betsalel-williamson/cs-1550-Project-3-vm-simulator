@@ -55,8 +55,15 @@ if (IN_CYGWIN)
     #    message(status "Flag not set")
 endif ()
 
-#add_definitions(-DDEBUG)
+SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
 add_definitions(-DTRACE_FILE_LOCATION=${TRACE_FILE_LOCATION})
+
+#add_definitions(-g)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${${PROJECT_NAME}_SOURCE_DIR/}${BUILD_DIR})
+
+# special debugger stuff for clion
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -gdwarf-3")
+#set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -gdwarf-3")
 
 include_directories(".")
 

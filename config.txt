@@ -5,7 +5,7 @@
 {BUILD_SCRIPT_FILE ./build.tcl}
 {TEST_SCRIPT_FILE ./test.tcl}
 {TEST_EXE _build/test/mainTests/TestSuite}
-{MAIN_EXE _build/vmsim}
+{MAIN_EXE /Users/school/Library/Developer/Xcode/DerivedData/project3-doijwfvufrubnlaiqfzjkrrughkd/Build/Products/Debug/project3}
 {git_project_name cs-1550-Project-3-vm-simulator}
 {IN_CYGWIN 1}
 {CMAKE_BUILD_TYPE Debug}

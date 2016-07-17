@@ -24,17 +24,128 @@
  * SOFTWARE.
  */
 
-#include <stdio.h>
 #include "view.h"
 
-void init_view(int i, char **pString) {
 
-    init_controller(i, pString);
+void *controller_thread(void *ptr){
+    
+    struct Args * args = (struct Args *) ptr;
+    
+    // not thread safe
+    init_controller(args->argc, args->argv);
+    
+    return NULL;
+}
 
-    printf("Hello World");
+void sleep_ms(long ms) {
+    struct timespec request = {0};
+    
+    time_t sec = (int) (ms / 1000);
+    ms = ms - (sec * 1000);
+    
+    request.tv_sec = sec;
+    request.tv_nsec = ms * 1000000L;
+    
+    while (nanosleep(&request, &request) == -1 && errno == EINTR)
+        continue;
+}
+
+int my_clock = 0;
+void *increment_clock_thread(void *ptr) {
+    
+    while (true) {
+        my_clock += 1;
+        sleep_ms(1000);
+    }
+    
+    //    return &my_clock;
+}
+
+void init_view(struct Args * args ) {
+    
+    pthread_t draw_pthread, controller_pthread, clock_thread;
+    
+    int iret1, iret2, iret6;
+    
+    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, NULL);
+    
+    if (iret1) {
+        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
+        exit(EXIT_FAILURE);
+    }
+    
+    iret2 = pthread_create(&controller_pthread, NULL, controller_thread, (void *) args);
+    
+    if (iret2) {
+        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
+        exit(EXIT_FAILURE);
+    }
+    
+    iret6 = pthread_create(&clock_thread, NULL, increment_clock_thread, NULL);
+    if (iret6) {
+        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret2);
+        exit(EXIT_FAILURE);
+    }
+    
+    char mystring[100];
+    bool quit = false;
+    while (quit == false) {
+        
+        fgets(mystring, 100, stdin);
+        
+        
+        if (toupper(mystring[0]) != 'Q') {
+            quit = false;
+        } else {
+            quit = true;
+        }
+    }
+    
 }
 
 void destruct_view() {
     destruct_controller();
 }
 
+void clear_screen() {
+    const char msg[] = "\033[2J";
+    syscall(4, STDOUT_FILENO, msg, sizeof(msg) - 1);
+}
+
+
+
+void draw() {
+    clear_screen();
+    
+    display_results();
+}
+
+#define REFRESH_RATE 100
+
+void *draw_thread(void *ptr) {
+    while (true) {
+        draw();
+        sleep_ms(REFRESH_RATE);
+    }
+}
+
+
+
+void display_results() {
+    singleton instance =     get_instance();
+    
+    //    Algorithm: Clock
+    //    Number of frames:       8
+    //    Total memory accesses:  1000000
+    //    Total page faults:      181856
+    //    Total writes to disk:   29401
+    
+    printf("\n%-32s\n\n", algorithmStrings[instance->o]);
+    printf("%-22s%10u\n", "Lines read:", instance->files_read);
+    printf("%-22s%10d\n", "Number of frames:", instance->d->frame_count);
+    printf("%-22s%10li\n", "Total memory accesses:", instance->d->access_count);
+    printf("%-22s%10li\n", "Total page faults:", instance->d->fault_count);
+    printf("%-22s%10li\n", "Total writes to disk:", instance->d->write_count);
+    printf("\n%-27s%2.2d:%2.2d\n", "Time elapsed is: ", my_clock / 60, my_clock % 60);
+    
+}

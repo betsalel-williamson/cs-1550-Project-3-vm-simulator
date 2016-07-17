@@ -25,15 +25,20 @@
  */
 
 #include <stdlib.h>
+#include <signal.h>
+
+
+#include "model.h"
 #include "view.h"
+#include "controller.h"
 
 /**
  * Handle quit to correctly exit and restore state on CTR-C.
  */
 void sig_handler(int signo) {
-
+    
     destruct_view();
-
+    
     if (signo == SIGINT) {
         exit(EXIT_SUCCESS);
     } else {
@@ -44,12 +49,25 @@ void sig_handler(int signo) {
 //./vmsim –n <numframes> -a <opt|clock|aging|lru> [-r <refresh>] <tracefile>
 
 int main(int argc, char **argv) {
-
+    
+    if(argc < 5){
+        print_debug(("Not enough arguments\n"));
+        printf("Follow this format:\n./vmsim –n <numframes> -a <opt|clock|aging|lru> [-r <refresh>] <tracefile>\n");
+        exit(EXIT_FAILURE);
+    }
+    
     signal(SIGINT, sig_handler);
-
-    init_view(argc, argv);
-
+    
+    struct Args *args = malloc(sizeof(struct Args));
+    
+    args->argc = argc;
+    args->argv = argv;
+    
+    
+    init_view(args);
+    
     destruct_view();
-
+    
+    
     return 0;
 }
