@@ -30,8 +30,7 @@ project(${PROJECT_LIBS_NAME} CXX C)
 
 # Where Project's .h files can be found.
 include_directories(
-        ${${PROJECT_LIBS_NAME}_SOURCE_DIR}/include
-        ${${PROJECT_LIBS_NAME}_SOURCE_DIR})
+        ${${PROJECT_LIBS_NAME}_SOURCE_DIR}/include)
 
 # Where Project's source files can be found.
 link_directories(${${PROJECT_LIBS_NAME}_BINARY_DIR}/src)
@@ -40,8 +39,8 @@ link_directories(${${PROJECT_LIBS_NAME}_BINARY_DIR}/src)
 # Defines the libraries.
 file(GLOB_RECURSE sources *.c)
 file(GLOB_RECURSE headers *.h)
-message(STATUS "sources = ${sources}")
-message(STATUS "headers = ${headers}")
+#message(STATUS "sources = ${sources}")
+#message(STATUS "headers = ${headers}")
 
 # Project libraries.
 add_library(${PROJECT_LIBS_NAME} STATIC

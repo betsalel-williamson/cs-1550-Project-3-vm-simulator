@@ -6,21 +6,30 @@
 //  Copyright (c) 2016 School. All rights reserved.
 //
 
-#ifndef __project3__view__
-#define __project3__view__
+
+
+#ifndef MAIN_DRAW_H
+#define MAIN_DRAW_H
 
 #include <stdio.h>
 #include <time.h>
 #include <pthread.h>
 #include <ctype.h>
+#include <unistd.h>
+
 #include "controller.h"
 #include "model.h"
-#include <unistd.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 void display_results();
 
 typedef struct Args {
-    int argc; char **argv;
+    int argc;
+    char **argv;
 } *args;
 
 void init_view(args arguments);
@@ -28,5 +37,11 @@ void init_view(args arguments);
 void destruct_view();
 
 void *draw_thread(void *ptr);
+
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* defined(__project3__view__) */

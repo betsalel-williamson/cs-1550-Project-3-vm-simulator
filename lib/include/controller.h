@@ -6,13 +6,6 @@
 //  Copyright (c) 2016 School. All rights reserved.
 //
 
-#ifndef __project3__controller__
-#define __project3__controller__
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 #include <sys/errno.h>
 #include <stdbool.h>
@@ -20,6 +13,14 @@ extern "C" {
 #include "radix-tree.h"
 #include "model.h"
 #include "view.h"
+
+#ifndef __project3__controller__
+#define __project3__controller__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 void init_controller(int i, char **pString);
 

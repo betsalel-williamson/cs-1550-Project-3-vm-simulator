@@ -6,15 +6,15 @@
 //  Copyright (c) 2016 School. All rights reserved.
 //
 
-#ifndef __project3__second_chance_page_replacement_algorithm__
-#define __project3__second_chance_page_replacement_algorithm__
-
 #include <stdio.h>
 #include <assert.h>
 
 #include "model.h"
 #include "view.h"
 #include "controller.h"
+
+#ifndef __project3__second_chance_page_replacement_algorithm__
+#define __project3__second_chance_page_replacement_algorithm__
 
 void second_chance_page_replacement_algorithm();
 

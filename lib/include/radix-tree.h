@@ -19,7 +19,6 @@
 #ifndef _LINUX_RADIX_TREE_H
 #define _LINUX_RADIX_TREE_H
 
-
 struct radix_tree_node;
 
 struct radix_tree_root {

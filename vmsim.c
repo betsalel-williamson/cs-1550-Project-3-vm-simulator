@@ -26,10 +26,7 @@
 
 #include <stdlib.h>
 #include <signal.h>
-//#include "model.h"
 #include "view.h"
-//#include "controller.h"
-
 /**
  * Handle quit to correctly exit and restore state on CTR-C.
  */

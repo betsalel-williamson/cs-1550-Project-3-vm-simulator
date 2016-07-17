@@ -55,8 +55,8 @@ if (IN_CYGWIN)
     #    message(status "Flag not set")
 endif ()
 
-SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
-add_definitions(-DTRACE_FILE_LOCATION=${TRACE_FILE_LOCATION})
+#SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
+#add_definitions(-DTRACE_FILE_LOCATION=${TRACE_FILE_LOCATION})
 
 #add_definitions(-g)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${${PROJECT_NAME}_SOURCE_DIR/}${BUILD_DIR})
