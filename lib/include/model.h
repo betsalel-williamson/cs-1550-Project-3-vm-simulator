@@ -65,12 +65,6 @@
 #define MAX_ADDRESS 0xFFFFFFFF
 // note max address in unsigned 32-bit integer
 
-typedef int algorithm_option;
-#define OPT 0
-#define CLOCK 1
-#define AGING 2
-#define LRU 3
-
 #define OPT_ARG_STRING "opt"
 #define CLOCK_ARG_STRING "clock"
 #define AGING_ARG_STRING "aging"

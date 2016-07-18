@@ -52,6 +52,10 @@ void destruct_controller();
 struct trace_tail_queue *read_trace_file(const char *file_name);
 
 typedef int algorithm_option;
+#define OPT 0
+#define CLOCK 1
+#define AGING 2
+#define LRU 3
 
 typedef void (*page_replacement_algorithm)();
 
