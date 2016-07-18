@@ -5,7 +5,7 @@
 {BUILD_SCRIPT_FILE ./build.tcl}
 {TEST_SCRIPT_FILE ./test.tcl}
 {TEST_EXE _build/test/mainTests/TestSuite}
-{MAIN_EXE /Users/school/Library/Developer/Xcode/DerivedData/project3-doijwfvufrubnlaiqfzjkrrughkd/Build/Products/Debug/project3 }
+{MAIN_EXE _build/vmsim}
 {IN_CYGWIN 0}
 {CMAKE_BUILD_TYPE Debug}
 {CMAKE_MACOSX_RPATH 1}
@@ -13,3 +13,4 @@
 {TRACE_FILE_LOCATION2 "/Users/school/Desktop/gcc.trace"}
 {SECRET_FILE "/Users/school/pass.tcl"}
 {git_project_name cs-1550-Project-3-vm-simulator}
+{CSV_OUTPUT 1}

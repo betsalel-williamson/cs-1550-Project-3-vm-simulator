@@ -26,6 +26,8 @@
 
 #include "view.h"
 
+#define SCREEN_REFRESH_RATE 100
+
 pthread_mutex_t draw_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void sleep_ms(long ms) {
@@ -91,14 +93,15 @@ void init_view(args arguments) {
 
     int iret1, iret2, iret3;
 
-#ifndef CSV_OUTPUT
-    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
-
-    if (iret1) {
-        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
-        exit(EXIT_FAILURE);
-    }
-#endif
+    // removed draw thread until
+//#ifndef CSV_OUTPUT
+//    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
+//
+//    if (iret1) {
+//        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
+//        exit(EXIT_FAILURE);
+//    }
+//#endif
 
     iret2 = pthread_create(&controller_pthread, NULL, controller_thread, (void *) arguments);
 
@@ -117,11 +120,15 @@ void init_view(args arguments) {
 
     instance->completed = false;
     while (!instance->completed) {
-        sleep_ms(1000);
+        sleep_ms(SCREEN_REFRESH_RATE);
     }
 
 #ifndef CSV_OUTPUT
     draw(arguments);
+#endif
+
+#ifdef CSV_OUTPUT
+    display_results();
 #endif
 
     destruct_view();
@@ -129,15 +136,9 @@ void init_view(args arguments) {
 
 void destruct_view() {
 
-
-#ifdef CSV_OUTPUT
-    display_results();
-#endif
-
     destruct_controller();
 }
 
-#define SCREEN_REFRESH_RATE 100
 
 void *draw_thread(void *ptr) {
 
