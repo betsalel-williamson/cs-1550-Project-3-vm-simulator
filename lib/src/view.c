@@ -26,7 +26,6 @@
 
 #include "view.h"
 
-
 pthread_mutex_t draw_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *controller_thread(void *ptr){

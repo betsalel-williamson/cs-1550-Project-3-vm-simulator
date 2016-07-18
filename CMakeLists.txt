@@ -72,6 +72,8 @@ add_subdirectory(test)
 
 project(${PROJECT_NAME})
 
+list(APPEND CMAKE_CXX_FLAGS "-pthread")
+
 include_directories(${${PROJECT_LIBS_NAME}_SOURCE_DIR}/include
         ${${PROJECT_LIBS_NAME}_SOURCE_DIR})
 
