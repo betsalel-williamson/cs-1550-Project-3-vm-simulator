@@ -44,9 +44,9 @@ void optimal_page_replacement() {
     int k;
     for (k = 0; k < instance->d->frame_count; k++) {
         frames[k] = malloc(sizeof(struct Page_table_entry));
-        frames[k]->address = -1;
+        frames[k]->address = (unsigned int) EMPTY;
         frames[k]->modify_bit = -1;
-        frames[k]->next_reference = -1;
+        frames[k]->next_reference = (unsigned int) -1;
         frames[k]->reference_bit = -1;
     }
     
@@ -100,7 +100,7 @@ void optimal_page_replacement() {
         
         if (!in_frame) {
             
-            qsort(frames, instance->d->frame_count, sizeof(struct Page_table_entry *), sort_next_reference);
+            qsort(frames, (size_t) instance->d->frame_count, sizeof(struct Page_table_entry *), sort_next_reference);
 //#ifdef _DEBUG
 //            int i;
 //            for (i = 0; i < instance->d->frame_count; i++) {
@@ -123,7 +123,19 @@ void optimal_page_replacement() {
                 instance->d->read_count++;
             }
         }
-        
+
+        // each next reference needs to decrease after the next step
+        int l;
+        for (l = 0; l < instance->d->frame_count; l++) {
+//        next frame will never have a distance of zero to cause underflow
+//            if (frames[l]->next_reference == 0){
+//        printf("Add %8.8x Next ref %u\n", trace_tail_queue_entry->address , trace_tail_queue_entry->next_reference);
+//            }
+            assert(frames[l] != 0);
+
+            frames[l]->next_reference--;
+        }
+
         instance->d->access_count++;
     }
     
