@@ -147,17 +147,17 @@ void second_chance_page_replacement_algorithm() {
 
         if (!in_frame) {
 
-            printf("Add %8.8x Next ref %u\n", trace_tail_queue_entry->address , trace_tail_queue_entry->next_reference);
+//            printf("Add %8.8x Next ref %u\n", trace_tail_queue_entry->address , trace_tail_queue_entry->next_reference);
 
             // the largest to smallest
             qsort(frames, (size_t) instance->d->frame_count, sizeof(struct Page_table_entry *), sort_reference_bit);
 
-            int i;
-            for (i = 0; i < instance->d->frame_count; i++) {
-                // for each item in frame increment if I see myself again
-
-                printf("[%d] pos: %u %4.4u\n", i, frames[i]->address , frames[i]->reference_bit);
-            }
+//            int i;
+//            for (i = 0; i < instance->d->frame_count; i++) {
+//                // for each item in frame increment if I see myself again
+//
+//                printf("[%d] pos: %u %4.4u\n", i, frames[i]->address , frames[i]->reference_bit);
+//            }
 
             // when I have a the largest number than that is the one to evict
             frames[0]->address = trace_tail_queue_entry->address;
