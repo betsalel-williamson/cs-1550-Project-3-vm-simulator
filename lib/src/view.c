@@ -87,8 +87,6 @@ void display_command_line_args(args arguments) {
 
 void init_view(args arguments) {
 
-    display_command_line_args(arguments);
-
     pthread_t draw_pthread, controller_pthread, clock_thread;
 
     int iret1, iret2, iret3;
