@@ -39,4 +39,10 @@ set ip "thoth.cs.pitt.edu"
 spawn scp $src_location "$user@$ip:$dest_location"
 expect "password:" {send "$pass\r" }
 
+spawn ssh "$user@$ip"
+
+expect "password:" {send "$pass\r" }
+
+expect "thoth" {send "cd $dest_location\r"}
+
 interact
