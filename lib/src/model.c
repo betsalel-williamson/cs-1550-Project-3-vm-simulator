@@ -27,10 +27,10 @@
 #include "model.h"
 
 const char *algorithmStrings[] = {
-    OPT_STRING,
-    CLOCK_STRING,
-    AGING_STRING,
-    LRU_STRING
+        OPT_STRING,
+        CLOCK_STRING,
+        AGING_STRING,
+        LRU_STRING
 };
 
 pthread_mutex_t instance_mutex = PTHREAD_MUTEX_INITIALIZER;;
@@ -39,39 +39,39 @@ pthread_mutex_t instance_mutex = PTHREAD_MUTEX_INITIALIZER;;
 singleton get_instance() {
     //    print_debug(("In get instance\n"));
     static singleton instance = NULL;
-    
+
     pthread_mutex_lock (&instance_mutex);
-    
+
     if (instance == NULL) {
-        
+
         // get map for struct
         instance = (singleton) calloc(1, sizeof(struct Singleton));
-        
+
         //        print_debug(("Calloc instance\n"));
-        
+
         // get map for disk
         instance->d = (disk) calloc(1, sizeof(struct Disk));
-        
+
         instance->d->access_count = 0;
         instance->d->fault_count = 0;
         instance->d->frame_count = 0;
         instance->d->hit_count = 0;
         instance->d->read_count = 0;
-        instance->d->refresh_interval_ns = 0;
+        instance->d->refresh_interval_ms = 100; // default value
         instance->d->write_count = 0;
-        
+
         instance->p = (program_results) calloc(1, sizeof(struct Program_results));
         instance->p->d = instance->d;
         instance->p->a = &instance->o;
-        
+
         instance->lines_read = 0;
-        
+
         instance->completed = false;
     } else {
         //        print_debug(("Trying to access instance\n"));
     }
     pthread_mutex_unlock (&instance_mutex);
-    
+
     return instance;
 }
 
@@ -79,7 +79,7 @@ singleton get_instance() {
 void destruct_instance() {
     // TODO find way to ensure that I'm not calling destruct when my instance hasn't been created yet? Not sure that is a big concern
     singleton instance = get_instance();
-    
+
     // unmap memory
     // need to destruct disk
     free(instance->p);

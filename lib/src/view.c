@@ -26,46 +26,33 @@
 
 #include "view.h"
 
-pthread_mutex_t draw_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-void *controller_thread(void *ptr){
-    
-    struct Args * args = (struct Args *) ptr;
-    
-    // not thread safe
-    init_controller(args->argc, args->argv);
-    
-    singleton instance = get_instance();
-    
-    instance->completed = true;
-    
-    pthread_exit((void*) 0);
-}
+pthread_mutex_t draw_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void sleep_ms(long ms) {
     struct timespec request = {0};
-    
+
     time_t sec = (int) (ms / 1000);
     ms = ms - (sec * 1000);
-    
+
     request.tv_sec = sec;
     request.tv_nsec = ms * 1000000L;
-    
+
     while (nanosleep(&request, &request) == -1 && errno == EINTR)
         continue;
 }
 
-int my_clock = 0;
+static int my_clock = 0;
+
 void *increment_clock_thread(void *ptr) {
-    
+
     singleton instance = get_instance();
-    
+
     while (!instance->completed) {
         my_clock += 1;
         sleep_ms(1000);
     }
-    
-    //    return &my_clock;
+
     pthread_exit((void*) 0);
 }
 
@@ -83,46 +70,58 @@ void clear_screen() {
 
 void draw(struct Args * args) {
     pthread_mutex_lock (&draw_mutex);
-//    clear_screen();
-//    draw_initial_information(args->argc,args->argv);
-//    display_results();
+    clear_screen();
+    draw_initial_information(args->argc,args->argv);
+    display_results();
     pthread_mutex_unlock (&draw_mutex);
 }
 
+void display_command_line_args(args arguments){
+    //    print_debug(("\nCommand-line arguments:\n"));
+    int count;
+    for (count = 0; count < arguments->argc; count++) {
+        print_debug(("  argv[%d]   %s\n", count, arguments->argv[count]));
+    }
+}
+
 void init_view(args arguments) {
-    
-    pthread_t draw_pthread, controller_pthread, clock_thread;
-    
-    int iret1, iret2, iret6;
-    
-    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
-    
-    if (iret1) {
-        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
-        exit(EXIT_FAILURE);
-    }
-    
+
+    display_command_line_args(arguments);
+
+    //draw_pthread,
+    pthread_t controller_pthread, clock_thread;
+
+    //    int iret1,
+    int iret2, iret3;
+
+    //    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
+    //
+    //    if (iret1) {
+    //        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
+    //        exit(EXIT_FAILURE);
+    //    }
+
     iret2 = pthread_create(&controller_pthread, NULL, controller_thread, (void *) arguments);
-    
+
     if (iret2) {
-        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
-        exit(EXIT_FAILURE);
-    }
-    
-    iret6 = pthread_create(&clock_thread, NULL, increment_clock_thread, NULL);
-    if (iret6) {
         fprintf(stderr, "Error - pthread_create() return code: %d\n", iret2);
         exit(EXIT_FAILURE);
     }
-    
+
+    iret3 = pthread_create(&clock_thread, NULL, increment_clock_thread, NULL);
+    if (iret3) {
+        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret3);
+        exit(EXIT_FAILURE);
+    }
+
     singleton instance = get_instance();
     instance->completed = false;
     while (!instance->completed) {
-        
+
     }
-    
+
     draw(arguments);
-    
+
     destruct_view();
 }
 
@@ -130,37 +129,37 @@ void destruct_view() {
     destruct_controller();
 }
 
-#define REFRESH_RATE 100
+#define SCREEN_REFRESH_RATE 100
 
 void *draw_thread(void *ptr) {
-    
+
     struct Args * args = (struct Args *) ptr;
-    
+
     singleton instance = get_instance();
-    
+
     while (!instance->completed) {
-        sleep_ms(REFRESH_RATE);
+        sleep_ms(SCREEN_REFRESH_RATE);
         draw(args);
     }
-    
+
     pthread_exit((void*) 0);
 }
 
 void display_results() {
     singleton instance = get_instance();
-    
+
     //    Algorithm: Clock
     //    Number of frames:       8
     //    Total memory accesses:  1000000
     //    Total page faults:      181856
     //    Total writes to disk:   29401
-    
+
     printf("\n%-32s\n\n", algorithmStrings[instance->o]);
-    printf("%-22s%10u\n", "Lines read:", instance->lines_read);
-    printf("%-22s%10d\n", "Number of frames:", instance->d->frame_count);
-    printf("%-22s%10li\n", "Total memory accesses:", instance->d->access_count);
-    printf("%-22s%10li\n", "Total page faults:", instance->d->fault_count);
-    printf("%-22s%10li\n", "Total writes to disk:", instance->d->write_count);
-    printf("\n%-27s%2.2d:%2.2d\n", "Time elapsed is: ", my_clock / 60, my_clock % 60);
-    
+    printf("%-22s\t%10u\n", "Lines read:", instance->lines_read);
+    printf("%-22s\t%10d\n", "Number of frames:", instance->d->frame_count);
+    printf("%-22s\t%10li\n", "Total memory accesses:", instance->d->access_count);
+    printf("%-22s\t%10li\n", "Total page faults:", instance->d->fault_count);
+    printf("%-22s\t%10li\n", "Total writes to disk:", instance->d->write_count);
+    printf("\n%-27s\t%2.2d:%2.2d\n", "Time elapsed is: ", my_clock / 60, my_clock % 60);
+
 }

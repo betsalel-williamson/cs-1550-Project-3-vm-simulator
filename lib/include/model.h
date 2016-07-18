@@ -2,16 +2,38 @@
 //  model.h
 //  project3
 //
-//  Created by School on 7/16/16.
-//  Copyright (c) 2016 School. All rights reserved.
+//  Created by Betsalel "Saul" Williamson on 7/16/16.
+//  Copyright (c) 2016 Betsalel "Saul" Williamson. All rights reserved.
 //
+
+/*
+ * MIT License
+ *
+ * Copyright (c) 2016 Betsalel "Saul" Williamson
+ *
+ * contact: saul.williamson@pitt.edu
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
 #ifndef __project3__model__
 #define __project3__model__
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <stdio.h>
 #include <sys/mman.h>
@@ -20,13 +42,14 @@ extern "C" {
 #include <stddef.h>
 #include <stdlib.h>
 #include <sys/queue.h>
-
 #include "optimal_page_replacement.h"
 #include "least_recently_used_algorithm.h"
 #include "second_chance_page_replacement_algorithm.h"
 #include "enhanced_second_chance_algorithm.h"
 
-
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
 
 #ifndef _DEBUG
 #define _DEBUG
@@ -113,8 +136,7 @@ typedef struct Page_table_entry {
 struct Page_tail_queue_entry {
 //    page p;
     unsigned int address;
-    unsigned int next_reference;
-    
+
     //    long time_of_use; // could be used to store exact time-stamp information
     //    int valid_bit; // not used in this program
     int reference_bit;
@@ -125,7 +147,7 @@ struct Page_tail_queue_entry {
     // note that this is a single bit in enhanced_second_chance_algorithm
     // the other algorithms will not use this
 //    SQ
-    
+
     TAILQ_ENTRY(Page_tail_queue_entry) entries;
 } *page_tail_queue_entry;
 
@@ -133,10 +155,7 @@ TAILQ_HEAD(page_tail_queue_entry, Page_tail_queue_entry) page_tail_queue_head;
 
 
 struct Page_circle_queue_entry {
-//    page p;
     unsigned int address;
-    unsigned int next_reference;
-    
     //    long time_of_use; // could be used to store exact time-stamp information
     //    int valid_bit; // not used in this program
     int reference_bit;
@@ -164,15 +183,15 @@ typedef struct Disk {
 //    long page_fault_evict_dirty;
     long hit_count;
     long fault_count;
-    long refresh_interval_ns; // refresh interval in nano seconds
+    long refresh_interval_ms; // refresh interval in milli seconds
 } *disk;
 
 typedef struct Program_results {
     algorithm_option * a;
-    long elapsed_time;
     disk d;
 } *program_results;
 
+typedef int usage_status;
 // 11 recently used and modified, probably will be used again soon and the page will need to be written out to disk before it can be replaced
 // 10 recently used, but clean, probably will be used again soon
 // 01 not recently use dbut modified, not quite as good because the page will need to be written out before replacement
@@ -190,10 +209,6 @@ void destruct_model();
 
 void destruct_instance();
 
-typedef void (*page_replacement_algorithm)();
-
-page_replacement_algorithm select_page_replacement_algorithm(algorithm_option o);
-
 typedef struct Singleton {
     disk d;
     struct trace_tail_queue *t;
@@ -205,10 +220,10 @@ typedef struct Singleton {
 
 singleton get_instance();
 
-#define EMPTY -1
+#define EMPTY_ADDRESS -1
 
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//}
+//#endif
 
 #endif /* defined(__project3__model__) */
