@@ -11,3 +11,5 @@
 {CMAKE_MACOSX_RPATH 1}
 {TRACE_FILE_LOCATION2 "/Users/school/Box Sync/Courses/- CS 1550/projects/3/cs-1550-Project-3-vm-simulator/downloads/gcc.trace"}
 {TRACE_FILE_LOCATION "/Users/school/Desktop/gcc.trace"}
+{SECRET_FILE "/Users/school/pass.tcl"}
+{git_project_name cs-1550-Project-3-vm-simulator}

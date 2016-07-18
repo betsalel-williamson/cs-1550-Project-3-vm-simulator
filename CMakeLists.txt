@@ -72,6 +72,7 @@ add_subdirectory(test)
 
 project(${PROJECT_NAME})
 
+add_definitions("-Wall -g -pthread")
 list(APPEND CMAKE_CXX_FLAGS "-pthread")
 
 include_directories(${${PROJECT_LIBS_NAME}_SOURCE_DIR}/include
