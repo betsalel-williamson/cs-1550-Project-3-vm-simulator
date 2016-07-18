@@ -26,7 +26,6 @@
 
 #include "view.h"
 
-
 pthread_mutex_t draw_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void sleep_ms(long ms) {
@@ -53,10 +52,10 @@ void *increment_clock_thread(void *ptr) {
         sleep_ms(1000);
     }
 
-    pthread_exit((void*) 0);
+    pthread_exit((void *) 0);
 }
 
-void draw_initial_information (int argc, char ** argv){
+void draw_initial_information(int argc, char **argv) {
     int count;
     for (count = 0; count < argc; count++) {
         printf("  argv[%d]   %s\n", count, argv[count]);
@@ -68,15 +67,15 @@ void clear_screen() {
     syscall(4, STDOUT_FILENO, msg, sizeof(msg) - 1);
 }
 
-void draw(struct Args * args) {
-    pthread_mutex_lock (&draw_mutex);
+void draw(struct Args *args) {
+    pthread_mutex_lock(&draw_mutex);
     clear_screen();
-    draw_initial_information(args->argc,args->argv);
+    draw_initial_information(args->argc, args->argv);
     display_results();
-    pthread_mutex_unlock (&draw_mutex);
+    pthread_mutex_unlock(&draw_mutex);
 }
 
-void display_command_line_args(args arguments){
+void display_command_line_args(args arguments) {
     //    print_debug(("\nCommand-line arguments:\n"));
     int count;
     for (count = 0; count < arguments->argc; count++) {
@@ -88,18 +87,18 @@ void init_view(args arguments) {
 
     display_command_line_args(arguments);
 
-    //draw_pthread,
-    pthread_t controller_pthread, clock_thread;
+    pthread_t draw_pthread, controller_pthread, clock_thread;
 
-    //    int iret1,
-    int iret2, iret3;
+    int iret1, iret2, iret3;
 
-    //    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
-    //
-    //    if (iret1) {
-    //        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
-    //        exit(EXIT_FAILURE);
-    //    }
+#ifndef CSV_OUTPUT
+    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
+
+    if (iret1) {
+        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
+        exit(EXIT_FAILURE);
+    }
+#endif
 
     iret2 = pthread_create(&controller_pthread, NULL, controller_thread, (void *) arguments);
 
@@ -115,17 +114,25 @@ void init_view(args arguments) {
     }
 
     singleton instance = get_instance();
+
     instance->completed = false;
     while (!instance->completed) {
-
+        sleep_ms(1000);
     }
-
-    draw(arguments);
 
     destruct_view();
 }
 
 void destruct_view() {
+
+#ifndef CSV_OUTPUT
+    draw(arguments);
+#endif
+
+#ifdef CSV_OUTPUT
+    display_results();
+#endif
+
     destruct_controller();
 }
 
@@ -133,7 +140,7 @@ void destruct_view() {
 
 void *draw_thread(void *ptr) {
 
-    struct Args * args = (struct Args *) ptr;
+    struct Args *args = (struct Args *) ptr;
 
     singleton instance = get_instance();
 
@@ -142,7 +149,7 @@ void *draw_thread(void *ptr) {
         draw(args);
     }
 
-    pthread_exit((void*) 0);
+    pthread_exit((void *) 0);
 }
 
 void display_results() {
@@ -153,7 +160,7 @@ void display_results() {
     //    Total memory accesses:  1000000
     //    Total page faults:      181856
     //    Total writes to disk:   29401
-
+#ifndef CSV_OUTPUT
     printf("\n%-32s\n\n", algorithmStrings[instance->o]);
     printf("%-22s\t%10u\n", "Lines read:", instance->lines_read);
     printf("%-22s\t%10d\n", "Number of frames:", instance->d->frame_count);
@@ -161,5 +168,18 @@ void display_results() {
     printf("%-22s\t%10li\n", "Total page faults:", instance->d->fault_count);
     printf("%-22s\t%10li\n", "Total writes to disk:", instance->d->write_count);
     printf("\n%-27s\t%2.2d:%2.2d\n", "Time elapsed is: ", my_clock / 60, my_clock % 60);
+#endif
+
+#ifdef CSV_OUTPUT
+    // csv output
+    printf("\n%-32s\n\n", algorithmStrings[instance->o]);
+    printf("%10u\n", instance->lines_read);
+    printf("%10d\n", instance->d->frame_count);
+    printf("%10li\n", instance->d->access_count);
+    printf("%10li\n", instance->d->fault_count);
+    printf("%10li\n", instance->d->write_count);
+    printf("%2.2d:%2.2d\n", my_clock / 60, my_clock % 60);
+#endif
+
 
 }

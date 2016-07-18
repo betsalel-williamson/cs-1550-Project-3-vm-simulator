@@ -86,7 +86,7 @@ typedef void (*page_replacement_algorithm)();
 
 page_replacement_algorithm select_page_replacement_algorithm(algorithm_option o);
 
-typedef void *(*refresh_rate_algorithm)(void * ptr);
+typedef void *(*refresh_rate_algorithm)(void *ptr);
 
 refresh_rate_algorithm select_refresh_rate_algorithm(algorithm_option o);
 
@@ -105,7 +105,7 @@ typedef int milliseconds;
 //} *my_trace;
 
 struct Trace_tail_queue_entry {
-    struct Trace_tail_queue_entry * t;
+    struct Trace_tail_queue_entry *t;
     unsigned int address;
     char mode;
     unsigned int next_reference;
@@ -115,12 +115,13 @@ struct Trace_tail_queue_entry {
 
 TAILQ_HEAD(trace_tail_queue, Trace_tail_queue_entry) trace_tail_queue_head, *radix_tail_queue_head;
 
-#define	TAILQ_FOREACH_FROM(var, start, field)					\
-for ((var) = (start);				\
-(var);							\
+#define    TAILQ_FOREACH_FROM(var, start, field)                    \
+for ((var) = (start);                \
+(var);                            \
 (var) = TAILQ_NEXT((var), field))
 
-void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int address, char mode, unsigned int position);
+void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int address, char mode,
+                                  unsigned int position);
 
 void destruct_trace_tail_queue();
 
@@ -196,7 +197,7 @@ typedef struct Disk {
 } *disk;
 
 typedef struct Program_results {
-    algorithm_option * a;
+    algorithm_option *a;
     disk d;
 } *program_results;
 

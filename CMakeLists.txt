@@ -55,6 +55,13 @@ if (IN_CYGWIN)
     #    message(status "Flag not set")
 endif ()
 
+if (CSV_OUTPUT)
+    #    message(status "Set cmake legacy setting")
+    add_definitions(-DCSV_OUTPUT)
+    #else()
+    #    message(status "Flag not set")
+endif ()
+
 #SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
 #add_definitions(-DTRACE_FILE_LOCATION=${TRACE_FILE_LOCATION})
 

@@ -42,6 +42,6 @@
 
 void enhanced_second_chance_algorithm();
 
-void * enhanced_second_refresh_rate_algorithm(void* ptr);
+void *enhanced_second_refresh_rate_algorithm(void *ptr);
 
 #endif /* defined(__project3__enhanced_second_chance_algorithm__) */

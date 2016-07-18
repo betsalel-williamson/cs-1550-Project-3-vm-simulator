@@ -40,7 +40,7 @@ singleton get_instance() {
     //    print_debug(("In get instance\n"));
     static singleton instance = NULL;
 
-    pthread_mutex_lock (&instance_mutex);
+    pthread_mutex_lock(&instance_mutex);
 
     if (instance == NULL) {
 
@@ -70,7 +70,7 @@ singleton get_instance() {
     } else {
         //        print_debug(("Trying to access instance\n"));
     }
-    pthread_mutex_unlock (&instance_mutex);
+    pthread_mutex_unlock(&instance_mutex);
 
     return instance;
 }

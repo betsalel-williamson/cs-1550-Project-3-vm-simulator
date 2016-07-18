@@ -45,5 +45,6 @@
 
 void second_chance_page_replacement_algorithm();
 
-void *second_chance_refresh_rate_algorithm(void * ptr);
+void *second_chance_refresh_rate_algorithm(void *ptr);
+
 #endif /* defined(__project3__second_chance_page_replacement_algorithm__) */

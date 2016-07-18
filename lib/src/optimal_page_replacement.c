@@ -37,11 +37,11 @@
 int sort_next_reference(const void *x, const void *y) {
 
     int result;
-    struct Page_table_entry **orderA = (struct Page_table_entry **)x;
-    struct Page_table_entry **orderB = (struct Page_table_entry **)y;
+    struct Page_table_entry **orderA = (struct Page_table_entry **) x;
+    struct Page_table_entry **orderB = (struct Page_table_entry **) y;
 
-    struct Page_table_entry * oa = *orderA;
-    struct Page_table_entry * ob = *orderB;
+    struct Page_table_entry *oa = *orderA;
+    struct Page_table_entry *ob = *orderB;
 
     unsigned int a = oa->next_reference;
     unsigned int b = ob->next_reference;
@@ -65,7 +65,7 @@ void optimal_page_replacement() {
 
     singleton instance = get_instance();
 
-    frames = malloc(sizeof(page)*instance->d->frame_count);
+    frames = malloc(sizeof(page) * instance->d->frame_count);
 
     int k;
     for (k = 0; k < instance->d->frame_count; k++) {
@@ -96,7 +96,7 @@ void optimal_page_replacement() {
         for (j = 0; j < instance->d->frame_count; j++) {
             // for each item in frame increment if I see myself again
 
-            if (frames[j]->address == EMPTY_ADDRESS){
+            if (frames[j]->address == EMPTY_ADDRESS) {
                 frames[j]->address = trace_tail_queue_entry->address;
                 frames[j]->next_reference = trace_tail_queue_entry->next_reference; // I'm in use
                 frames[j]->reference_bit = trace_tail_queue_entry->position;
@@ -167,7 +167,7 @@ void optimal_page_replacement() {
 
     int j;
     for (j = 0; j < instance->d->frame_count; j++) {
-        if (frames[j] != NULL){
+        if (frames[j] != NULL) {
             free(frames[j]);
             frames[j] = NULL;
         }

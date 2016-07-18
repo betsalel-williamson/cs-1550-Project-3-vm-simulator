@@ -57,42 +57,49 @@ puts $TRACE_FILE_LOCATION
 # need to run  multiple scenarios
 #./vmsim –n <numframes> -a <opt|clock|aging|lru> [-r <refresh>] <tracefile>
 #//  8, 16, 32, and 64
-#set OPTIONS { {-n 8 -a opt $TRACE_FILE_LOCATION} }
-#   {-n 16 -a opt $TRACE_FILE_LOCATION}
-#   {-n 32 -a opt $TRACE_FILE_LOCATION}
-#   {-n 64 -a opt $TRACE_FILE_LOCATION}
-#   {-n 8 -a clock -r 100 $TRACE_FILE_LOCATION}
-#   {-n 16 -a clock -r 100 $TRACE_FILE_LOCATION}
-#   {-n 32 -a clock -r 100 $TRACE_FILE_LOCATION}
-#   {-n 64 -a clock -r 100 $TRACE_FILE_LOCATION}
-#   {-n 8 -a aging -r 100 $TRACE_FILE_LOCATION}
-#   {-n 16 -a aging -r 100 $TRACE_FILE_LOCATION}
-#   {-n 32 -a aging -r 100 $TRACE_FILE_LOCATION}
-#   {-n 64 -a aging -r 100 $TRACE_FILE_LOCATION}
-#   {-n 8 -a lru $TRACE_FILE_LOCATION}
-#   {-n 16 -a lru $TRACE_FILE_LOCATION}
-#   {-n 32 -a lru $TRACE_FILE_LOCATION}
-#   {-n 64 -a lru $TRACE_FILE_LOCATION}
-#}
-
-set OPTIONS {
-       {-n 8 -a aging -r 50 $TRACE_FILE_LOCATION}
-       {-n 8 -a aging -r 500 $TRACE_FILE_LOCATION}
-       {-n 8 -a aging -r 5000 $TRACE_FILE_LOCATION}
-       {-n 8 -a aging -r 50000 $TRACE_FILE_LOCATION}
-       {-n 16 -a aging -r 50 $TRACE_FILE_LOCATION}
-       {-n 16 -a aging -r 500 $TRACE_FILE_LOCATION}
-       {-n 16 -a aging -r 5000 $TRACE_FILE_LOCATION}
-       {-n 16 -a aging -r 50000 $TRACE_FILE_LOCATION}
-       {-n 32 -a aging -r 50 $TRACE_FILE_LOCATION}
-       {-n 32 -a aging -r 500 $TRACE_FILE_LOCATION}
-       {-n 32 -a aging -r 5000 $TRACE_FILE_LOCATION}
-       {-n 32 -a aging -r 50000 $TRACE_FILE_LOCATION}
-       {-n 64 -a aging -r 50 $TRACE_FILE_LOCATION}
-       {-n 64 -a aging -r 500 $TRACE_FILE_LOCATION}
-       {-n 64 -a aging -r 5000 $TRACE_FILE_LOCATION}
-       {-n 64 -a aging -r 50000 $TRACE_FILE_LOCATION}
+set OPTIONS { {-n 8 -a opt $TRACE_FILE_LOCATION}
+   {-n 16 -a opt $TRACE_FILE_LOCATION}
+   {-n 32 -a opt $TRACE_FILE_LOCATION}
+   {-n 64 -a opt $TRACE_FILE_LOCATION}
+   {-n 8 -a lru $TRACE_FILE_LOCATION}
+   {-n 16 -a lru $TRACE_FILE_LOCATION}
+   {-n 32 -a lru $TRACE_FILE_LOCATION}
+   {-n 64 -a lru $TRACE_FILE_LOCATION}
 }
+
+#set OPTIONS { {-n 8 -a aging -r 50 $TRACE_FILE_LOCATION}
+#       {-n 16 -a aging -r 50 $TRACE_FILE_LOCATION}
+#       {-n 32 -a aging -r 50 $TRACE_FILE_LOCATION}
+#       {-n 64 -a aging -r 50 $TRACE_FILE_LOCATION}
+#       {-n 8 -a aging -r 500 $TRACE_FILE_LOCATION}
+#       {-n 16 -a aging -r 500 $TRACE_FILE_LOCATION}
+#       {-n 32 -a aging -r 500 $TRACE_FILE_LOCATION}
+#       {-n 64 -a aging -r 500 $TRACE_FILE_LOCATION}
+#       {-n 8 -a aging -r 5000 $TRACE_FILE_LOCATION}
+#       {-n 16 -a aging -r 5000 $TRACE_FILE_LOCATION}
+#       {-n 32 -a aging -r 5000 $TRACE_FILE_LOCATION}
+#       {-n 64 -a aging -r 5000 $TRACE_FILE_LOCATION}
+#       {-n 8 -a aging -r 50000 $TRACE_FILE_LOCATION}
+#       {-n 16 -a aging -r 50000 $TRACE_FILE_LOCATION}
+#       {-n 32 -a aging -r 50000 $TRACE_FILE_LOCATION}
+#       {-n 64 -a aging -r 50000 $TRACE_FILE_LOCATION}
+#       {-n 8 -a clock -r 50 $TRACE_FILE_LOCATION}
+#       {-n 16 -a clock -r 50 $TRACE_FILE_LOCATION}
+#       {-n 32 -a clock -r 50 $TRACE_FILE_LOCATION}
+#       {-n 64 -a clock -r 50 $TRACE_FILE_LOCATION}
+#       {-n 8 -a clock -r 500 $TRACE_FILE_LOCATION}
+#       {-n 16 -a clock -r 500 $TRACE_FILE_LOCATION}
+#       {-n 32 -a clock -r 500 $TRACE_FILE_LOCATION}
+#       {-n 64 -a clock -r 500 $TRACE_FILE_LOCATION}
+#       {-n 8 -a clock -r 5000 $TRACE_FILE_LOCATION}
+#       {-n 16 -a clock -r 5000 $TRACE_FILE_LOCATION}
+#       {-n 32 -a clock -r 5000 $TRACE_FILE_LOCATION}
+#       {-n 64 -a clock -r 5000 $TRACE_FILE_LOCATION}
+#       {-n 8 -a clock -r 50000 $TRACE_FILE_LOCATION}
+#       {-n 16 -a clock -r 50000 $TRACE_FILE_LOCATION}
+#       {-n 32 -a clock -r 50000 $TRACE_FILE_LOCATION}
+#       {-n 64 -a clock -r 50000 $TRACE_FILE_LOCATION}
+#}
 
 set chan [open run.log a]
 set timestamp [clock format [clock seconds]]

@@ -50,7 +50,7 @@ void least_recently_used_algorithm() {
         struct Page_tail_queue_entry *p, *removed;
         TAILQ_FOREACH(p, &page_tail_queue_head, entries) {
             // when accessed move to the tail of stack
-            if (p->address == trace_tail_queue_entry->address){
+            if (p->address == trace_tail_queue_entry->address) {
                 // if found
                 //    TAILQ_SWAP
                 item_found = true;
@@ -67,11 +67,11 @@ void least_recently_used_algorithm() {
             }
         }
 
-        if (!item_found){
+        if (!item_found) {
             // if not
             // when full remove from tail of stack
             // remove head
-            if (number_of_items_in_frames == instance->d->frame_count){
+            if (number_of_items_in_frames == instance->d->frame_count) {
                 removed = TAILQ_FIRST(&page_tail_queue_head);
                 TAILQ_REMOVE(&page_tail_queue_head, TAILQ_FIRST(&page_tail_queue_head), entries);
                 free(removed);

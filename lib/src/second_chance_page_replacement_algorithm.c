@@ -36,7 +36,7 @@
 
 static page *frames = NULL;
 
-void shift_frame_bits(){
+void shift_frame_bits() {
     singleton instance = get_instance();
     int j;
     for (j = 0; j < instance->d->frame_count; j++) {
@@ -54,7 +54,7 @@ void shift_frame_bits(){
     }
 }
 
-void* second_chance_refresh_rate_algorithm(void * ptr) {
+void *second_chance_refresh_rate_algorithm(void *ptr) {
 
     singleton instance = get_instance();
 
@@ -64,17 +64,17 @@ void* second_chance_refresh_rate_algorithm(void * ptr) {
         shift_frame_bits();
     }
 
-    pthread_exit((void*) 0);
+    pthread_exit((void *) 0);
 }
 
 // we want to remove the top item and we store things from small to large
 int sort_reference_bit(const void *x, const void *y) {
     int result;
-    struct Page_table_entry **pointer_pointer_A = (struct Page_table_entry **)x;
-    struct Page_table_entry **pointer_pointer_B = (struct Page_table_entry **)y;
+    struct Page_table_entry **pointer_pointer_A = (struct Page_table_entry **) x;
+    struct Page_table_entry **pointer_pointer_B = (struct Page_table_entry **) y;
 
-    struct Page_table_entry * pointer_A = *pointer_pointer_A;
-    struct Page_table_entry * pointer_B = *pointer_pointer_B;
+    struct Page_table_entry *pointer_A = *pointer_pointer_A;
+    struct Page_table_entry *pointer_B = *pointer_pointer_B;
 
     int a = pointer_A->reference_bit;
     int b = pointer_B->reference_bit;
@@ -96,7 +96,7 @@ void second_chance_page_replacement_algorithm() {
 
     singleton instance = get_instance();
 
-    frames = malloc(sizeof(page)*instance->d->frame_count);
+    frames = malloc(sizeof(page) * instance->d->frame_count);
 
     int k;
     for (k = 0; k < instance->d->frame_count; k++) {
@@ -117,7 +117,7 @@ void second_chance_page_replacement_algorithm() {
         for (j = 0; j < instance->d->frame_count; j++) {
             // for each item in frame increment if I see myself again
 
-            if (frames[j]->address == EMPTY_ADDRESS){
+            if (frames[j]->address == EMPTY_ADDRESS) {
                 frames[j] = calloc(1, sizeof(struct Page_table_entry));
                 frames[j]->address = trace_tail_queue_entry->address;
                 frames[j]->reference_bit = 0b10000000; // I'm in use
@@ -177,7 +177,7 @@ void second_chance_page_replacement_algorithm() {
     int j;
 
     for (j = 0; j < instance->d->frame_count; j++) {
-        if (frames[j] != NULL){
+        if (frames[j] != NULL) {
             free(frames[j]);
             frames[j] = NULL;
         }

@@ -47,7 +47,8 @@
 void display_results();
 
 typedef struct Args {
-    int argc; char **argv;
+    int argc;
+    char **argv;
 } *args;
 
 void init_view(args arguments);

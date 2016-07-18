@@ -29,10 +29,11 @@
 
 // not thread safe
 pthread_mutex_t controller_mutex = PTHREAD_MUTEX_INITIALIZER;
-void *controller_thread(void *ptr){
-    pthread_mutex_lock (&controller_mutex);
 
-    struct Args * args = (struct Args *) ptr;
+void *controller_thread(void *ptr) {
+    pthread_mutex_lock(&controller_mutex);
+
+    struct Args *args = (struct Args *) ptr;
 
     init_controller(args->argc, args->argv);
 
@@ -40,9 +41,9 @@ void *controller_thread(void *ptr){
 
     instance->completed = true;
 
-    pthread_mutex_lock (&controller_mutex);
+    pthread_mutex_lock(&controller_mutex);
 
-    pthread_exit((void*) 0);
+    pthread_exit((void *) 0);
 }
 
 RADIX_TREE(my_Tree);
@@ -55,7 +56,7 @@ void perform_algorithm(algorithm_option o) {
 
 const char *get_filename_ext(const char *filename) {
     const char *dot = strrchr(filename, '.');
-    if(!dot || dot == filename) return "";
+    if (!dot || dot == filename) return "";
     return dot + 1;
 }
 
@@ -71,7 +72,7 @@ void init_controller(int argc, char **argv) {
 
         if (strcmp(argv[count], "-n") == 0) {
             count++;
-            instance->d->frame_count = atoi (argv[count]);
+            instance->d->frame_count = atoi(argv[count]);
         } else if (strcmp(argv[count], "-a") == 0) {
             count++;
             if (strcmp(argv[count], OPT_ARG_STRING) == 0) {
@@ -85,7 +86,7 @@ void init_controller(int argc, char **argv) {
             }
         } else if (strcmp(argv[count], "-r") == 0) {
             count++;
-            instance->d->refresh_interval_ms = atoi (argv[count]);
+            instance->d->refresh_interval_ms = atoi(argv[count]);
 
             // spawn refresh rate thread here
 
@@ -104,7 +105,7 @@ void init_controller(int argc, char **argv) {
 
             // error if file extenstion is wrong
             const char *filename_ext = get_filename_ext(argv[count]);
-            if(strcmp(filename_ext,"trace")!=0){
+            if (strcmp(filename_ext, "trace") != 0) {
                 print_debug(("This is not a trace file: '%s'\n", argv[count]));
                 exit(EXIT_FAILURE);
             }
@@ -114,15 +115,14 @@ void init_controller(int argc, char **argv) {
     }
 
     perform_algorithm(instance->o);
-
-    display_results();
 }
 
 void destruct_controller() {
     destruct_model();
 }
 
-void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int address, char mode, unsigned int position) {
+void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int address, char mode,
+                                  unsigned int position) {
     /*	Insert at the tail. */
     struct Trace_tail_queue_entry *t;
 
@@ -139,10 +139,10 @@ void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int ad
 
         struct trace_tail_queue *radix_tail_queue_head_p = radix_tree_lookup(&my_Tree, t->address);
 
-        if (radix_tail_queue_head_p == NULL){
+        if (radix_tail_queue_head_p == NULL) {
             radix_tail_queue_head_p = malloc(sizeof(trace_tail_queue_head));
             TAILQ_INIT(radix_tail_queue_head_p);
-            struct Trace_tail_queue_entry * p1;
+            struct Trace_tail_queue_entry *p1;
             p1 = malloc(sizeof(struct Trace_tail_queue_entry));
             p1->position = t->position;
             p1->address = t->address;
@@ -150,10 +150,10 @@ void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int ad
             p1->t = t;
 
             TAILQ_INSERT_HEAD(radix_tail_queue_head_p, p1, entries);
-            radix_tree_insert(&my_Tree,t->address,radix_tail_queue_head_p);
+            radix_tree_insert(&my_Tree, t->address, radix_tail_queue_head_p);
         } else {
             // TODO: find way to improve temp variable replacement when not overworked.
-            struct Trace_tail_queue_entry * p1, *p2;
+            struct Trace_tail_queue_entry *p1, *p2;
             p1 = TAILQ_FIRST(radix_tail_queue_head_p);
             p2 = malloc(sizeof(struct Trace_tail_queue_entry));
 
@@ -162,8 +162,8 @@ void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int ad
             p2->next_reference = t->next_reference;
             p2->t = t;
 
-            p1->next_reference = p2->position-p1->position;
-            p1->t->next_reference = p2->position-p1->position;
+            p1->next_reference = p2->position - p1->position;
+            p1->t->next_reference = p2->position - p1->position;
 
             TAILQ_INSERT_HEAD(radix_tail_queue_head_p, p2, entries);
 
@@ -190,7 +190,7 @@ struct trace_tail_queue *read_trace_file(const char *file_name) {
         exit(EXIT_FAILURE);
     }
 
-    singleton instance =  get_instance();
+    singleton instance = get_instance();
     instance->lines_read = 0;
     while (true) {
         int ret = fscanf(fp, "%x %c", &address, &mode);
