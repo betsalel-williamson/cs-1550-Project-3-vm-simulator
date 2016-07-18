@@ -5,7 +5,10 @@
 _build/
 *.log
 *config.txt
-~*
+*(Autosaved)*
+*~*
+*.xlsx
+*.docx
 
 # os X files
 .DS_Store
