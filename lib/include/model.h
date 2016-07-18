@@ -173,7 +173,6 @@ typedef struct Program_results {
     disk d;
 } *program_results;
 
-typedef int usage_status;
 // 11 recently used and modified, probably will be used again soon and the page will need to be written out to disk before it can be replaced
 // 10 recently used, but clean, probably will be used again soon
 // 01 not recently use dbut modified, not quite as good because the page will need to be written out before replacement

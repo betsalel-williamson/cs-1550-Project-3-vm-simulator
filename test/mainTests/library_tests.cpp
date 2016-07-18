@@ -2,9 +2,8 @@
 // Created by Betsalel Williamson on 6/30/16.
 //
 
-#include <lib/include/controller.h>
-//#include "gmock/gmock.h"
 #include "gtest/gtest.h"
+#include "enhanced_second_chance_algorithm.h"
 
 //using ::testing::AtLeast;                     // #1
 //
@@ -57,7 +56,7 @@ TEST(Control_tests, Read_file_Test) {
 
 TEST(Control_tests, Get_status_recently_used_and_modified) {
 
-    Page_table_entry *p = (Page_table_entry *) malloc(sizeof(Page_table_entry));
+    Page_circle_queue_entry *p = (Page_circle_queue_entry *) malloc(sizeof(Page_circle_queue_entry));
     p->reference_bit = 1;
     p->modify_bit = 1;
 
@@ -66,7 +65,7 @@ TEST(Control_tests, Get_status_recently_used_and_modified) {
 
 TEST(Control_tests, Get_status_recently_used_and_not_modified) {
 
-    Page_table_entry *p = (Page_table_entry *) malloc(sizeof(Page_table_entry));
+    Page_circle_queue_entry *p = (Page_circle_queue_entry *) malloc(sizeof(Page_circle_queue_entry));
     p->reference_bit = 1;
     p->modify_bit = 0;
 
@@ -75,7 +74,7 @@ TEST(Control_tests, Get_status_recently_used_and_not_modified) {
 
 TEST(Control_tests, Get_status_not_recently_used_and_modified) {
 
-    Page_table_entry *p = (Page_table_entry *) malloc(sizeof(Page_table_entry));
+    Page_circle_queue_entry *p = (Page_circle_queue_entry *) malloc(sizeof(Page_circle_queue_entry));
     p->reference_bit = 0;
     p->modify_bit = 1;
 
@@ -84,7 +83,7 @@ TEST(Control_tests, Get_status_not_recently_used_and_modified) {
 
 TEST(Control_tests, Get_status_not_recently_used_and_not_modified) {
 
-    Page_table_entry *p = (Page_table_entry *) malloc(sizeof(Page_table_entry));
+    Page_circle_queue_entry *p = (Page_circle_queue_entry *) malloc(sizeof(Page_circle_queue_entry));
     p->reference_bit = 0;
     p->modify_bit = 0;
 
