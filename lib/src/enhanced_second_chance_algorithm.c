@@ -34,11 +34,6 @@
 
 #include "enhanced_second_chance_algorithm.h"
 
-
-usage_status get_usage_status(struct Page_circle_queue_entry *p) {
-    return p->reference_bit << 1 | p->modify_bit;
-}
-
 void shift_enhanced_second_chance_bits (){
     struct Page_circle_queue_entry *p;
     CIRCLEQ_FOREACH(p, &page_circle_queue_head, entries) {

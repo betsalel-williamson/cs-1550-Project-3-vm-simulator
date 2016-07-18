@@ -47,9 +47,10 @@
 #include "second_chance_page_replacement_algorithm.h"
 #include "enhanced_second_chance_algorithm.h"
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
+// needed to execute gtests
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef _DEBUG
 #define _DEBUG
@@ -199,7 +200,6 @@ typedef struct Program_results {
     disk d;
 } *program_results;
 
-typedef int usage_status;
 // 11 recently used and modified, probably will be used again soon and the page will need to be written out to disk before it can be replaced
 // 10 recently used, but clean, probably will be used again soon
 // 01 not recently use dbut modified, not quite as good because the page will need to be written out before replacement
@@ -228,10 +228,14 @@ typedef struct Singleton {
 
 singleton get_instance();
 
+typedef int usage_status;
+
+usage_status get_usage_status(struct Page_circle_queue_entry *p);
+
 #define EMPTY_ADDRESS -1
 
-//#ifdef __cplusplus
-//}
-//#endif
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* defined(__project3__model__) */

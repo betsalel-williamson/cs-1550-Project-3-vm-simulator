@@ -152,6 +152,8 @@ refresh_rate_algorithm select_refresh_rate_algorithm(algorithm_option o) {
     return f;
 }
 
-
+usage_status get_usage_status(struct Page_circle_queue_entry *p) {
+    return p->reference_bit << 1 | p->modify_bit;
+}
 
 

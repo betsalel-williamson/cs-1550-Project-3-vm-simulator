@@ -4,6 +4,8 @@
 
 #include "gtest/gtest.h"
 #include "enhanced_second_chance_algorithm.h"
+#include "model.h"
+#include "controller.h"
 
 //using ::testing::AtLeast;                     // #1
 //

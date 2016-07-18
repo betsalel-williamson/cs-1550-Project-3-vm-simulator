@@ -43,6 +43,11 @@
 #include "model.h"
 #include "view.h"
 
+// needed to execute gtests
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void init_controller(int i, char **pString);
 
 void *controller_thread(void *ptr);
@@ -50,5 +55,9 @@ void *controller_thread(void *ptr);
 void destruct_controller();
 
 struct trace_tail_queue *read_trace_file(const char *file_name);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* defined(__project3__controller__) */
