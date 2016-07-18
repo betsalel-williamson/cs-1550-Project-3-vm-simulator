@@ -120,14 +120,15 @@ void init_view(args arguments) {
         sleep_ms(1000);
     }
 
+#ifndef CSV_OUTPUT
+    draw(arguments);
+#endif
+
     destruct_view();
 }
 
 void destruct_view() {
 
-#ifndef CSV_OUTPUT
-    draw(arguments);
-#endif
 
 #ifdef CSV_OUTPUT
     display_results();
