@@ -83,7 +83,7 @@ void least_recently_used_algorithm() {
             p = malloc(sizeof(struct Page_tail_queue_entry));
             p->address = trace_tail_queue_entry->address;
             TAILQ_INSERT_TAIL(&page_tail_queue_head, p, entries);
-            // TODO: add to page faults
+
             instance->d->fault_count++;
             if (trace_tail_queue_entry->mode == 'W') {
                 //                    printf("%c", trace_tail_queue_entry->t->mode);

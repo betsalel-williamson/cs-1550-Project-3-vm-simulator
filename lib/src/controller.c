@@ -152,7 +152,7 @@ void insert_into_trace_tail_queue(struct trace_tail_queue *head, unsigned int ad
             TAILQ_INSERT_HEAD(radix_tail_queue_head_p, p1, entries);
             radix_tree_insert(&my_Tree,t->address,radix_tail_queue_head_p);
         } else {
-            // TODO: improve temp variable replacement when not overworked.
+            // TODO: find way to improve temp variable replacement when not overworked.
             struct Trace_tail_queue_entry * p1, *p2;
             p1 = TAILQ_FIRST(radix_tail_queue_head_p);
             p2 = malloc(sizeof(struct Trace_tail_queue_entry));

@@ -126,7 +126,7 @@ void optimal_page_replacement() {
 
         if (!in_frame) {
 
-            qsort(frames, instance->d->frame_count, sizeof(struct Page_table_entry *), sort_next_reference);
+            qsort(frames, (size_t) instance->d->frame_count, sizeof(struct Page_table_entry *), sort_next_reference);
 //#ifdef _DEBUG
 //            int i;
 //            for (i = 0; i < instance->d->frame_count; i++) {

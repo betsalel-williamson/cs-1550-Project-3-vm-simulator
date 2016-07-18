@@ -76,8 +76,8 @@ int sort_reference_bit(const void *x, const void *y) {
     struct Page_table_entry * pointer_A = *pointer_pointer_A;
     struct Page_table_entry * pointer_B = *pointer_pointer_B;
 
-    unsigned int a = pointer_A->reference_bit;
-    unsigned int b = pointer_B->reference_bit;
+    int a = pointer_A->reference_bit;
+    int b = pointer_B->reference_bit;
 
     if (a == b) {
         result = 0;
@@ -101,9 +101,9 @@ void second_chance_page_replacement_algorithm() {
     int k;
     for (k = 0; k < instance->d->frame_count; k++) {
         frames[k] = malloc(sizeof(struct Page_table_entry));
-        frames[k]->address = EMPTY_ADDRESS;
+        frames[k]->address = (unsigned int) EMPTY_ADDRESS;
         frames[k]->modify_bit = -1;
-        frames[k]->next_reference = -1;
+        frames[k]->next_reference = (unsigned int) -1;
         frames[k]->reference_bit = -1;
     }
 
@@ -122,7 +122,6 @@ void second_chance_page_replacement_algorithm() {
                 frames[j]->address = trace_tail_queue_entry->address;
                 frames[j]->reference_bit = 0b10000000; // I'm in use
 
-                // TODO: add to page faults
                 instance->d->fault_count++;
                 if (trace_tail_queue_entry->mode == 'W') {
                     instance->d->write_count++;
@@ -151,7 +150,7 @@ void second_chance_page_replacement_algorithm() {
             printf("Add %8.8x Next ref %u\n", trace_tail_queue_entry->address , trace_tail_queue_entry->next_reference);
 
             // the largest to smallest
-            qsort(frames, instance->d->frame_count, sizeof(struct Page_table_entry *), sort_reference_bit);
+            qsort(frames, (size_t) instance->d->frame_count, sizeof(struct Page_table_entry *), sort_reference_bit);
 
             int i;
             for (i = 0; i < instance->d->frame_count; i++) {
