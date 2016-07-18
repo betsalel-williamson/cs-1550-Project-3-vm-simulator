@@ -51,18 +51,4 @@ void destruct_controller();
 
 struct trace_tail_queue *read_trace_file(const char *file_name);
 
-typedef int algorithm_option;
-#define OPT 0
-#define CLOCK 1
-#define AGING 2
-#define LRU 3
-
-typedef void (*page_replacement_algorithm)();
-
-page_replacement_algorithm select_page_replacement_algorithm(algorithm_option o);
-
-typedef void *(*refresh_rate_algorithm)(void * ptr);
-
-refresh_rate_algorithm select_refresh_rate_algorithm(algorithm_option o);
-
 #endif /* defined(__project3__controller__) */

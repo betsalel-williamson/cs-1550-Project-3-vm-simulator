@@ -75,6 +75,20 @@
 #define AGING_STRING "Aging: Second chance page replacement algorithm"
 #define LRU_STRING "LRU: Least recently used algorithm"
 
+typedef int algorithm_option;
+#define OPT 0
+#define CLOCK 1
+#define AGING 2
+#define LRU 3
+
+typedef void (*page_replacement_algorithm)();
+
+page_replacement_algorithm select_page_replacement_algorithm(algorithm_option o);
+
+typedef void *(*refresh_rate_algorithm)(void * ptr);
+
+refresh_rate_algorithm select_refresh_rate_algorithm(algorithm_option o);
+
 extern const char *algorithmStrings[];
 
 // a frame is the same thing as a page table entry, it is just an array or list of page table entries

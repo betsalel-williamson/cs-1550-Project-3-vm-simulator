@@ -108,7 +108,49 @@ void destruct_trace_tail_queue() {
 }
 
 
+page_replacement_algorithm select_page_replacement_algorithm(algorithm_option o) {
+    page_replacement_algorithm f;
 
+    switch (o) {
+        case OPT:
+            f = optimal_page_replacement;
+            break;
+        case CLOCK:
+            f = enhanced_second_chance_algorithm;
+            break;
+        case AGING:
+            f = second_chance_page_replacement_algorithm;
+            break;
+        case LRU:
+            f = least_recently_used_algorithm;
+            break;
+        default:
+            print_debug(("Entered unkown algorithm option."));
+            exit(EXIT_FAILURE);
+    }
+
+    return f;
+}
+
+refresh_rate_algorithm select_refresh_rate_algorithm(algorithm_option o) {
+    refresh_rate_algorithm f;
+
+    switch (o) {
+        case CLOCK:
+            f = enhanced_second_refresh_rate_algorithm;
+            break;
+        case AGING:
+            f = second_chance_refresh_rate_algorithm;
+            break;
+        case LRU:
+        case OPT:
+        default:
+            print_debug(("Don't include '-r' option for this algorithm."));
+            exit(EXIT_FAILURE);
+    }
+
+    return f;
+}
 
 
 
