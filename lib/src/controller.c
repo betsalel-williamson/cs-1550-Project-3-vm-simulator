@@ -41,7 +41,7 @@ void *controller_thread(void *ptr) {
 
     instance->completed = true;
 
-    pthread_mutex_lock(&controller_mutex);
+    pthread_mutex_unlock(&controller_mutex);
 
     pthread_exit((void *) 0);
 }
