@@ -35,8 +35,10 @@
 
 // test read tracefile
 
+// there should be a better way to input the test file
+// this is statically defined -- want to have the configuration get this
 #ifndef TRACE_FILE_LOCATION
-#define TRACE_FILE_LOCATION "/Users/school/Box Sync/Courses/- CS 1550/projects/3/cs-1550-Project-3-vm-simulator/downloads/gcc.trace"
+#define TRACE_FILE_LOCATION "downloads/gcc.trace"
 #endif
 
 TEST(Control_tests, Read_file_Test) {
