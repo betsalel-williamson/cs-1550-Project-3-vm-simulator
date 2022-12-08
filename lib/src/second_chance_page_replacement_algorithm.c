@@ -40,10 +40,7 @@ void shift_frame_bits() {
     singleton instance = get_instance();
     int j;
     for (j = 0; j < instance->d->frame_count; j++) {
-        if (frames == NULL) {
-            break;
-        }
-        if (frames[j]->address == EMPTY_ADDRESS) {
+        if (frames == NULL || frames[j] == 0 || frames[j]->address == EMPTY_ADDRESS) {
             break;
         } else {
 //            printf("[%d] Add %8.8x ref bit %4.4x\n", j, frames[j]->address , frames[j]->reference_bit);

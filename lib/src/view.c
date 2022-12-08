@@ -90,14 +90,14 @@ void init_view(args arguments) {
 
     int iret1, iret2, iret3;
 
-#ifndef CSV_OUTPUT
-   iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
+// #ifndef CSV_OUTPUT
+//    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
 
-   if (iret1) {
-       fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
-       exit(EXIT_FAILURE);
-   }
-#endif
+//    if (iret1) {
+//        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
+//        exit(EXIT_FAILURE);
+//    }
+// #endif
 
     iret2 = pthread_create(&controller_pthread, NULL, controller_thread, (void *) arguments);
 
@@ -161,10 +161,10 @@ void display_results() {
 #ifndef CSV_OUTPUT
     printf("\n%-32s\n\n", algorithmStrings[instance->o]);
     printf("%-22s\t%10u\n", "Lines read:", instance->lines_read);
-    printf("%-22s\t%10d\n", "Number of frames:", instance->d->frame_count);
-    printf("%-22s\t%10li\n", "Total memory accesses:", instance->d->access_count);
-    printf("%-22s\t%10li\n", "Total page faults:", instance->d->fault_count);
-    printf("%-22s\t%10li\n", "Total writes to disk:", instance->d->write_count);
+    printf("%-22s\t%10d\n", "Number of frames:", (instance->lines_read != 0 ? instance->d->frame_count : 0));
+    printf("%-22s\t%10li\n", "Total memory accesses:", (instance->lines_read != 0 ? instance->d->access_count : 0));
+    printf("%-22s\t%10li\n", "Total page faults:", (instance->lines_read != 0 ? instance->d->fault_count : 0));
+    printf("%-22s\t%10li\n", "Total writes to disk:", (instance->lines_read != 0 ? instance->d->write_count : 0));
     printf("\n%-27s\t%2.2d:%2.2d\n", "Time elapsed is: ", my_clock / 60, my_clock % 60);
 #endif
 
