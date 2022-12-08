@@ -1,6 +1,9 @@
 # idea files
 .idea/
 
+# vscode files
+.vscode/
+
 # misc files
 _build/
 *.log
