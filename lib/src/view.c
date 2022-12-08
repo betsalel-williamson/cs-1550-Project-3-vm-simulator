@@ -90,15 +90,14 @@ void init_view(args arguments) {
 
     int iret1, iret2, iret3;
 
-    // removed draw thread until
-//#ifndef CSV_OUTPUT
-//    iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
-//
-//    if (iret1) {
-//        fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
-//        exit(EXIT_FAILURE);
-//    }
-//#endif
+#ifndef CSV_OUTPUT
+   iret1 = pthread_create(&draw_pthread, NULL, draw_thread, (void *) arguments);
+
+   if (iret1) {
+       fprintf(stderr, "Error - pthread_create() return code: %d\n", iret1);
+       exit(EXIT_FAILURE);
+   }
+#endif
 
     iret2 = pthread_create(&controller_pthread, NULL, controller_thread, (void *) arguments);
 
