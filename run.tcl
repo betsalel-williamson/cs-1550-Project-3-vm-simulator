@@ -56,65 +56,40 @@ puts $TRACE_FILE_LOCATION
 # start of end to end tests
 # need to run  multiple scenarios
 #./vmsim –n <numframes> -a <opt|clock|aging|lru> [-r <refresh>] <tracefile>
-#//  8, 16, 32, and 64
-set OPTIONS { {-n 8 -a opt $TRACE_FILE_LOCATION}
-   {-n 16 -a opt $TRACE_FILE_LOCATION}
-   {-n 32 -a opt $TRACE_FILE_LOCATION}
-   {-n 64 -a opt $TRACE_FILE_LOCATION}
-   {-n 8 -a lru $TRACE_FILE_LOCATION}
-   {-n 16 -a lru $TRACE_FILE_LOCATION}
-   {-n 32 -a lru $TRACE_FILE_LOCATION}
-   {-n 64 -a lru $TRACE_FILE_LOCATION}
-}
 
-#set OPTIONS { {-n 8 -a aging -r 50 $TRACE_FILE_LOCATION}
-#       {-n 16 -a aging -r 50 $TRACE_FILE_LOCATION}
-#       {-n 32 -a aging -r 50 $TRACE_FILE_LOCATION}
-#       {-n 64 -a aging -r 50 $TRACE_FILE_LOCATION}
-#       {-n 8 -a aging -r 500 $TRACE_FILE_LOCATION}
-#       {-n 16 -a aging -r 500 $TRACE_FILE_LOCATION}
-#       {-n 32 -a aging -r 500 $TRACE_FILE_LOCATION}
-#       {-n 64 -a aging -r 500 $TRACE_FILE_LOCATION}
-#       {-n 8 -a aging -r 5000 $TRACE_FILE_LOCATION}
-#       {-n 16 -a aging -r 5000 $TRACE_FILE_LOCATION}
-#       {-n 32 -a aging -r 5000 $TRACE_FILE_LOCATION}
-#       {-n 64 -a aging -r 5000 $TRACE_FILE_LOCATION}
-#       {-n 8 -a aging -r 50000 $TRACE_FILE_LOCATION}
-#       {-n 16 -a aging -r 50000 $TRACE_FILE_LOCATION}
-#       {-n 32 -a aging -r 50000 $TRACE_FILE_LOCATION}
-#       {-n 64 -a aging -r 50000 $TRACE_FILE_LOCATION}
-#       {-n 8 -a clock -r 50 $TRACE_FILE_LOCATION}
-#       {-n 16 -a clock -r 50 $TRACE_FILE_LOCATION}
-#       {-n 32 -a clock -r 50 $TRACE_FILE_LOCATION}
-#       {-n 64 -a clock -r 50 $TRACE_FILE_LOCATION}
-#       {-n 8 -a clock -r 500 $TRACE_FILE_LOCATION}
-#       {-n 16 -a clock -r 500 $TRACE_FILE_LOCATION}
-#       {-n 32 -a clock -r 500 $TRACE_FILE_LOCATION}
-#       {-n 64 -a clock -r 500 $TRACE_FILE_LOCATION}
-#       {-n 8 -a clock -r 5000 $TRACE_FILE_LOCATION}
-#       {-n 16 -a clock -r 5000 $TRACE_FILE_LOCATION}
-#       {-n 32 -a clock -r 5000 $TRACE_FILE_LOCATION}
-#       {-n 64 -a clock -r 5000 $TRACE_FILE_LOCATION}
-#       {-n 8 -a clock -r 50000 $TRACE_FILE_LOCATION}
-#       {-n 16 -a clock -r 50000 $TRACE_FILE_LOCATION}
-#       {-n 32 -a clock -r 50000 $TRACE_FILE_LOCATION}
-#       {-n 64 -a clock -r 50000 $TRACE_FILE_LOCATION}
-#}
+set numFrames {8 16 32 64}
+set algorithms {opt clock aging lru}
+set refreshRates {50 500 5000 50000}
+
+# create args from numFrames, algorithms, refreshRates
+set ARGS {}
+
+foreach numFrame $numFrames {
+  foreach algorithm $algorithms {
+    switch $algorithm {
+      clock - aging {
+        foreach refreshRate $refreshRates {
+            lappend ARGS "-n $numFrame -a $algorithm -r $refreshRate $TRACE_FILE_LOCATION"
+        }
+      }
+      default {
+            lappend ARGS "-n $numFrame -a $algorithm $TRACE_FILE_LOCATION"
+      }
+    }
+  }
+}
 
 set chan [open run.log a]
 set timestamp [clock format [clock seconds]]
 puts $chan "$timestamp\n"
 
-foreach option $OPTIONS {
-
-    if { [catch {set result [exec $MAIN_EXE {*}[eval list $option]]} reason] } {
-
-    puts "Failed main execution: $reason"
-
+foreach args $ARGS {
+    puts "running: $MAIN_EXE [eval list $args]"
+    if { [catch {set result [exec $MAIN_EXE {*}[eval list $args]]} reason] } {
+      puts "Failed main execution: $reason"
     } else {
-
-    puts $chan $result
-
+      puts "Success!"
+      puts $chan $result
     }
 }
 
