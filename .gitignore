@@ -4,7 +4,7 @@
 # misc files
 _build/
 *.log
-*config.txt
+*config.tcl
 *(Autosaved)*
 *~*
 *.xlsx

@@ -1,5 +1,8 @@
 #! /usr/bin/env expect
 
+# File to quickly download the updates to the files from the server location
+# to the downloads folder.
+
 #/*
 # * MIT License
 # *

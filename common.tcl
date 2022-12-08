@@ -50,7 +50,7 @@ proc cf_write {fname args} {
 }
 
 proc clean_build {} {
-  exec rm -rf _build\ config.txt
+  exec rm -rf _build\ config.tcl
 }
 
 proc clean_logs {} {
@@ -82,13 +82,13 @@ if { $::argc > 0 } {
     puts "No command line argument passed."
 }
 
-set cfile [file join [file dir [info script]] config.txt]
+set cfile [file join [file dir [info script]] config.tcl]
 
 set chan [open config.log a]
 set timestamp [clock format [clock seconds]]
 puts $chan "$timestamp\n"
 
-if {[file exists config.txt]} {
+if {[file exists config.tcl]} {
   # this is a directory
   puts $chan "Found existing config file..."
 } else {
@@ -117,7 +117,7 @@ if {[file exists config.txt]} {
 
     set CMAKE_MACOSX_RPATH 1
 
-    set TRACE_FILE_LOCATION 1
+    set TRACE_FILE_LOCATION downloads/gcc.trace
 
 # TODO this could be made into one list, but the issue was that these variables need to be set in addition to being written to the configuration file
   cf_write $cfile BUILD_DIR PROJECT_NAME PROJECT_LIBS_NAME TEST_SUITE_NAME BUILD_SCRIPT_FILE TEST_SCRIPT_FILE TEST_EXE MAIN_EXE IN_CYGWIN CMAKE_BUILD_TYPE CMAKE_MACOSX_RPATH

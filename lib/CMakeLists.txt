@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 2.6.4)
-
 #/*
 # * MIT License
 # *
@@ -25,6 +23,8 @@ cmake_minimum_required(VERSION 2.6.4)
 # * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # * SOFTWARE.
 # */
+
+cmake_minimum_required(VERSION 3.5)
 
 project(${PROJECT_LIBS_NAME} CXX C)
 

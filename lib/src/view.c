@@ -65,8 +65,7 @@ void draw_initial_information(int argc, char **argv) {
 }
 
 void clear_screen() {
-    const char msg[] = "\033[2J";
-    syscall(4, STDOUT_FILENO, msg, sizeof(msg) - 1);
+    printf("\33[2J");
 }
 
 void draw(struct Args *args) {

@@ -24,7 +24,7 @@
 # * SOFTWARE.
 # */
 
-cmake_minimum_required(VERSION 2.6.4)
+cmake_minimum_required(VERSION 3.5)
 
 # read in configuration file
 function(read_configuration_file file_name)
@@ -46,7 +46,7 @@ function(read_configuration_file file_name)
     endforeach ()
 endfunction(read_configuration_file)
 
-read_configuration_file("config.txt")
+read_configuration_file("config.tcl")
 
 if (IN_CYGWIN)
     #    message(status "Set cmake legacy setting")
